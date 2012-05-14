@@ -1,0 +1,104 @@
+never  {    /* <>{stateA1 == 7} */
+T0_init:
+	if
+	:: ((stateA1 == 7)) -> goto accept_all
+	:: (1) -> goto T0_init
+	fi;
+accept_all:
+	skip
+}
+never  {    /* !(<>{stateA1 == 7}) */
+accept_init:
+T0_init:
+	if
+	:: (! ((stateA1 == 7))) -> goto T0_init
+	fi;
+}
+never  {    /* !(<{stateA1 == 7}>) */
+accept_init:
+T0_init:
+	if
+	:: (! ((<{stateA1 == 7}>))) -> goto accept_all
+	fi;
+accept_all:
+	skip
+}
+never  {    /* (<>{stateA1 == 7}) */
+T0_init:
+	if
+	:: ((stateA1 == 7)) -> goto accept_all
+	:: (1) -> goto T0_init
+	fi;
+accept_all:
+	skip
+}
+never  {    /* (<>({stateA1 == 5}||{stateA1 == 6})) */
+T0_init:
+	if
+	:: (({stateA1 == 5}||{stateA1 == 6})) -> goto accept_all
+	:: (1) -> goto T0_init
+	fi;
+accept_all:
+	skip
+}
+never  {    /* (<>{stateA1 == 5}||{stateA1 == 6}) */
+T0_init:
+	if
+	:: ((((stateA1 == 5)) || ((stateA1 == 6)))) -> goto accept_all
+	:: (1) -> goto T0_S2
+	fi;
+T0_S2:
+	if
+	:: ((stateA1 == 5)) -> goto accept_all
+	:: (1) -> goto T0_S2
+	fi;
+accept_all:
+	skip
+}
+never  {    /* !(<>{stateA1 == 5}||{stateA1 == 6}) */
+accept_init:
+T0_init:
+	if
+	:: (! ((stateA1 == 5)) && ! ((stateA1 == 6))) -> goto accept_S3
+	fi;
+accept_S3:
+T0_S3:
+	if
+	:: (! ((stateA1 == 5))) -> goto accept_S3
+	fi;
+}
+never  {    /* !(<>{stateA1 == 2}) */
+accept_init:
+T0_init:
+	if
+	:: (! ((stateA1 == 2))) -> goto T0_init
+	fi;
+}
+never  {    /* (<>{stateA1 == 2}) */
+T0_init:
+	if
+	:: ((stateA1 == 2)) -> goto accept_all
+	:: (1) -> goto T0_init
+	fi;
+accept_all:
+	skip
+}
+never  {    /* !(<>{stateA1 == 5}||<>{stateA1 == 6}) */
+accept_init:
+T0_init:
+	if
+	:: (! ((stateA1 == 5)) && ! ((stateA1 == 6))) -> goto T0_init
+	fi;
+}
+never  {    /* !(<>{stateA1 != 5}||{stateA1 != 6}) */
+accept_init:
+T0_init:
+	if
+	:: (! ((stateA1 != 5)) && ! ((stateA1 != 6))) -> goto accept_S3
+	fi;
+accept_S3:
+T0_S3:
+	if
+	:: (! ((stateA1 != 5))) -> goto accept_S3
+	fi;
+}
