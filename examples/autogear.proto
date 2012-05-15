@@ -1,10 +1,12 @@
-//interface Driver {
-//	number press(number boxState);
-//}
+interface Driver {
+	number press(number boxState);
+}
 
-//class DefaultDriver < Driver {
-//	number press(number boxState){}
-//}
+class DefaultDriver < Driver {
+	number press(number boxState){
+		return random boxState;
+	}
+}
 
 class AutoGear << Prototype {
 	Driver driver = new DefaultDriver();
@@ -18,7 +20,7 @@ class AutoGear << Prototype {
 	}
 
 	state neutral(){
-		cmd = random 3;
+		cmd = driver.press(3);
 		if (cmd == 1){// engine turn off selected
 	        	finalize();
 		} else if (cmd == 2){ // reverse selected				
@@ -29,15 +31,11 @@ class AutoGear << Prototype {
 	}
 
 	state reverse(){
-		cmd = random 2;
-		while (cmd != 2){
-			cmd = random 2;	
-		}
 		neutral();
 	}
 
 	state gear1(){
-		cmd = random 2;
+		cmd = driver.press(2);
 		if (cmd == 1){
 			neutral();
 		} else {
@@ -45,7 +43,7 @@ class AutoGear << Prototype {
 		}
 	}
 	state gear2(){
-		cmd = random 2;
+		cmd = driver.press(2);
 		if (cmd == 1){
 			gear1();
 		} else {
@@ -53,7 +51,7 @@ class AutoGear << Prototype {
 		}
 	}
 	state gear3(){
-	       cmd = random 2;
+	       cmd = driver.press(2);
 		if (cmd == 1){
 			gear2();
 		} else {
@@ -61,7 +59,7 @@ class AutoGear << Prototype {
 		}
 	}
 	state gear4(){
-	        cmd = random 2;
+	        cmd = driver.press(2);
 		if (cmd == 1){
 			gear3();
 		} else {
@@ -69,7 +67,7 @@ class AutoGear << Prototype {
 		}
 	}
 	state gear5(){
-                cmd = random 2;
+                cmd = driver.press(2);
 		if (cmd == 1){
 			gear4();
 		}
