@@ -1,6 +1,6 @@
 == Tokens ==
 
-data types:		"number", "Prototype", "state", , "prototype", "string", "bool", "object"
+data types:		"number", "state", , "prototype", "string", "bool", "object"
 functions:		"random", "initialize", "finalize", "main"
 LTL:			"finally", "globally", "until", "release"
 
@@ -16,10 +16,23 @@ buildin words:	"interface", "class", "return", "new"
 <INTERFACE_DESCR> ::= "interface" ID "{" <METHODS> "}"
 <METHODS> ::= <TYPE> ID "(" [ {<TYPE> ID [ "," <TYPE> ID] } ] ")" ";"
 <TYPE> ::= "number" | "bool" | "string" | "object"
-<CLASS_DESCR> ::= "class" ID [ ( "<" ID ) | ( "<<" ID ) ] "{" <BODY> "}"
-<BODY> ::= <BUILDIN_OPERATOR> | <ASSIGNMENT> | <CALL>
-<BUILDIN_OPERATOR> ::= <PRINT> |  | <RETURN>
+<CLASS_DESCR> ::= "class" ID [ ( "<" ID [ { "," ID } ] ) | ( "<<" ID ) ] "{" { <VAR> } "}"
+<VAR> ::= <TYPE> ID  "=" <EXPRESSION> ";" | "state" ID "(" [ {<TYPE> ID [ "," <TYPE> ID] } ] ")" "{" {<STATE_BODY>} "}"
+<STATE_BODY> ::= <ASSIGNMENT> ";" | <BUILDIN_OPERATOR> | <CALL> | <IF> | <FOR> | <WHILE> | <DO>
+<BUILDIN_OPERATOR> ::= <PRINT> | <DIE> | <RETURN>
+<DIE> ::= "die" <EXPRESSION> ";"
 <PRINT> ::= "print" "(" <EXPRESSION> ")" ";"
 <RETURN> ::= "return" <EXPRESSION> ";"
-<ASSIGNMENT> ::= <ID> "=" <EXPRESSION> ";"
+<ASSIGNMENT> ::= <ID> "=" <EXPRESSION>
 <CALL> ::= <ID> "(" [ <EXPRESSION> { ", " <EXPRESSION> } ] ")" ";"
+<EXPRESSION> ::= [ <EXPRESSION> "+" | <EXPRESSION> "-" ] <SUMMAND>
+<SUMMAND> ::= [ <SUMMAND> "+" | <SUMMAND> "-" ] <MULTIPLIER>
+<MULTIPLIER> ::= [ <MULTIPLIER> "*" | <MULTIPLIER> "/" ] <SIMPLE_EXPRESSION>
+<SIMPLE_EXPRESSION> ::= <ID> | <NUMBER> | <STRING> | <CALL> | "(" <EXPRESSION> ")"
+<BODY> ::= "{" { <STATE_BODY> } "}" | <STATE_BODY>
+<IF> ::= "if" "(" <EXPRESSION> ")" <BODY>
+<FOR> ::= "for" "(" <ASSIGNMENT> ";" <EXPRESSION> ";"  <ASSIGNMENT> ")" <BODY>
+<WHILE> ::= "while" "(" <EXPRESSION> ")" <BODY>
+<DO> ::= "do" "{" { <STATE_BODY> } "}" "while" "(" <EXPRESSION> ")" ";"
+
+//TODO change EXPRESSION
