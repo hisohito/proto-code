@@ -1,0 +1,125 @@
+interface User {
+	number press(number avaliableButtons);
+}
+class DefaultUser < User {
+	number press(number avaliableButtons) {
+		return random avaliableButtons;
+	}
+}
+
+class ATM << Prototype {
+	User user = new DefaultUser();
+	number cmd;
+
+	state finalize() {
+		return "End of work";
+	}
+
+	state printBalance(){
+		return returnCard();
+	}
+
+	state show(){
+		cmd = user.press(2);
+		if (cmd == 2){// press exit
+			return returnCard();
+		} else { // pess print button
+			return printBalance();
+		}
+	}
+
+	state balanceRequest(){
+		cmd = random 2;
+		if (cmd == 2){// server error
+			return returnCard();
+		} else { // get balance
+			return show();
+		}
+	}
+	
+	state printingCheck(){
+		return returnCard();
+	}	
+
+	state printCheck(){
+		cmd = user.press(2);
+		if (cmd == 2){// press exit
+			return returnCard();
+		} else { // press print button
+			return printingCheck();
+		}	
+	}
+
+	state giveMoney(){
+		return printCheck();
+	}
+
+	state moneyRequest(){
+		cmd = user.press(2);
+		if (cmd == 2){// no such count of money on card
+			return returnCard();
+		} else { // success request money
+			return giveMoney();
+		}
+	}
+
+	state enterCount(){
+		cmd = user.press(2);
+		if (cmd == 2){// press exit
+			return returnCard();
+		} else { // enter count
+			return moneyRequest();
+		}
+	}
+
+	state mainMenu(){
+		cmd = user.press(3);
+		if (cmd == 3){// press exit
+			return returnCard();
+		} else if (cmd == 2){ // press balance request 
+			return balanceRequest();
+		} else {
+			return enterCount();
+		}
+	}
+
+	state autorization(){
+		cmd = user.press(2);
+		if (cmd == 2){// incorrect pin
+			return returnCard();
+		} else { // correct pin
+			return mainMenu();
+		}
+	}
+
+	state returnCard(){
+		return insertCard();
+	}
+
+	state enterPinCode(){
+		cmd = user.press(2);
+		if (cmd == 2){
+			return returnCard();
+		} else { 
+			return autorization();
+		}
+	}
+
+	state insertCard(){
+		cmd = user.press(2);
+		if (cmd == 2){ // press turn off
+			return finalize();
+		} else { // card was inserted
+			return enterPinCode();
+		}
+		
+	}
+
+	state main(){
+	     	return insertCard();
+	}
+}
+
+prototype ATM() {
+	
+}
