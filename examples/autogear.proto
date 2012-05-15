@@ -13,7 +13,9 @@ class AutoGear << Prototype {
 
 	state initialize() {}
 
-	state finalize() {}
+	state finalize() {
+		return "End of work";
+	}
 
 	state sleep() {
 		neutral();
@@ -67,13 +69,16 @@ class AutoGear << Prototype {
 		}
 	}
 	state gear5(){
-                cmd = driver.press(2);
-		if (cmd == 1){
-			gear4();
-		}
+                gear4();
 	}
 
 	state main(){
-		currentAction = sleep();
+		return sleep();
 	}
 }
+
+prototype AutoGear() {
+	finally AutoGear::finalize;
+	globally finally AutoGear::neutral;
+	AutoGear::neutral intil AutoGear::finalize;	
+} 
