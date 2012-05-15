@@ -1,0 +1,81 @@
+//interface Driver {
+//	number press(number boxState);
+//}
+
+//class DefaultDriver < Driver {
+//	number press(number boxState){}
+//}
+
+class AutoGear << Prototype {
+	Driver driver = new DefaultDriver();
+
+	state initialize() {}
+
+	state finalize() {}
+
+	state sleep() {
+		neutral();
+	}
+
+	state neutral(){
+		cmd = random 3;
+		if (cmd == 1){// engine turn off selected
+	        	finalize();
+		} else if (cmd == 2){ // reverse selected				
+			reverse();			
+		} else { // forward selected
+			gear1();
+		}
+	}
+
+	state reverse(){
+		cmd = random 2;
+		while (cmd != 2){
+			cmd = random 2;	
+		}
+		neutral();
+	}
+
+	state gear1(){
+		cmd = random 2;
+		if (cmd == 1){
+			neutral();
+		} else {
+			gear2();
+		}
+	}
+	state gear2(){
+		cmd = random 2;
+		if (cmd == 1){
+			gear1();
+		} else {
+			gear3();
+		}
+	}
+	state gear3(){
+	       cmd = random 2;
+		if (cmd == 1){
+			gear2();
+		} else {
+			gear4();
+		}
+	}
+	state gear4(){
+	        cmd = random 2;
+		if (cmd == 1){
+			gear3();
+		} else {
+			gear5();
+		}
+	}
+	state gear5(){
+                cmd = random 2;
+		if (cmd == 1){
+			gear4();
+		}
+	}
+
+	state main(){
+		currentAction = sleep();
+	}
+}
