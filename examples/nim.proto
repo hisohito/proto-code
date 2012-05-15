@@ -1,0 +1,67 @@
+//
+// DATA TYPES: state, bool, sting, object
+//
+//
+
+interface Player {
+	number take(number things);		
+}
+
+class DefaultPlayer < Player {
+	number take(number things) {
+		return random things;
+	}
+} 
+
+class NimGame << Prototype {
+	
+	Player[] players = [new DefaultPlayer(), new DefaltPlayer()];
+
+	number things = random 100;
+
+	state a() {
+		return "The first player won!";
+	}
+
+	state a() {
+		return "The second player won!";
+	}
+	
+
+	state initialize() {
+
+	}
+
+	state finalize() {
+
+	}
+
+	state one() {
+		return players[0].take(things);
+	}
+
+
+	state two() {
+		return players[1].take(things);
+	}
+	
+	
+	state main() {
+
+		while(true) {
+			things = things - one();
+			if (things == 0) return a(); 
+			things = things - two();
+			if (things == 0) return b();			
+		}
+
+	}
+}
+
+
+prototype NimGame() {
+
+	finally NimGame::a or NimGame:b;
+	globally NimGame::a or NimGame::b or NumGame::one or NimGame::two;
+	!NimGame::a util NimGame::a; 
+// todo:	release
