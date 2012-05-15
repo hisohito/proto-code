@@ -1,36 +1,25 @@
 == Tokens ==
-"<"
-"<<"
-","
-";"
-"+"
-"-"
-"*"
-"/"
-"="
-"=="
-"!="
-"("
-")"
-"]"
-"["
 
-interface
-number
-class
-return
-random
-Prototype
-new
-state
-initialize
-finalize
-main
-prototype
-finally
-globally 
-until
-release
-string
-bool
-object
+data types:		"number", "Prototype", "state", , "prototype", "string", "bool", "object"
+functions:		"random", "initialize", "finalize", "main"
+LTL:			"finally", "globally", "until", "release"
+
+"<", "<<", ",", ";", "+", "-", "*", "/", "=", "==", "!=", "(", ")", "]", "[", "::"
+
+buildin words:	"interface", "class", "return", "new"
+
+== Grammar ==
+<PROGRAM> ::= { <STATEMENT> }
+<STATEMENT> ::= <INTERFACE_DESCR> | <CLASS_DESCR> | <LTL_RULE>
+<LTL_RULE> ::= "prototype" ID "(" ")" "{" { <LTL_OP> } "}"
+<LTL_OP> ::= ("finally" | "globally") ID ";" | ID ( "until" | "release" ) ID ";"
+<INTERFACE_DESCR> ::= "interface" ID "{" <METHODS> "}"
+<METHODS> ::= <TYPE> ID "(" [ {<TYPE> ID [ "," <TYPE> ID] } ] ")" ";"
+<TYPE> ::= "number" | "bool" | "string" | "object"
+<CLASS_DESCR> ::= "class" ID [ ( "<" ID ) | ( "<<" ID ) ] "{" <BODY> "}"
+<BODY> ::= <BUILDIN_OPERATOR> | <ASSIGNMENT> | <CALL>
+<BUILDIN_OPERATOR> ::= <PRINT> |  | <RETURN>
+<PRINT> ::= "print" "(" <EXPRESSION> ")" ";"
+<RETURN> ::= "return" <EXPRESSION> ";"
+<ASSIGNMENT> ::= <ID> "=" <EXPRESSION> ";"
+<CALL> ::= <ID> "(" [ <EXPRESSION> { ", " <EXPRESSION> } ] ")" ";"
