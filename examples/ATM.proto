@@ -121,5 +121,5 @@ class ATM << Prototype {
 }
 
 prototype ATM() {
-	
+	finally ATM::finalize;	
 }
