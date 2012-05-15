@@ -18,58 +18,58 @@ class AutoGear << Prototype {
 	}
 
 	state sleep() {
-		neutral();
+		return neutral();
 	}
 
 	state neutral(){
 		cmd = driver.press(3);
 		if (cmd == 1){// engine turn off selected
-	        	finalize();
+	        return finalize();
 		} else if (cmd == 2){ // reverse selected				
-			reverse();			
+			return reverse();			
 		} else { // forward selected
-			gear1();
+			return gear1();
 		}
 	}
 
 	state reverse(){
-		neutral();
+		return neutral();
 	}
 
 	state gear1(){
 		cmd = driver.press(2);
 		if (cmd == 1){
-			neutral();
+			return neutral();
 		} else {
-			gear2();
+			return gear2();
 		}
 	}
 	state gear2(){
 		cmd = driver.press(2);
 		if (cmd == 1){
-			gear1();
+			return gear1();
 		} else {
-			gear3();
+			return gear3();
 		}
 	}
 	state gear3(){
 	       cmd = driver.press(2);
 		if (cmd == 1){
-			gear2();
+			return gear2();
 		} else {
-			gear4();
+			return gear4();
 		}
 	}
 	state gear4(){
 	        cmd = driver.press(2);
 		if (cmd == 1){
-			gear3();
+			return gear3();
 		} else {
-			gear5();
+			return gear5();
 		}
 	}
 	state gear5(){
-                gear4();
+        return gear4();
 	}
 
 	state main(){
@@ -80,5 +80,5 @@ class AutoGear << Prototype {
 prototype AutoGear() {
 	finally AutoGear::finalize;
 	globally finally AutoGear::neutral;
-	AutoGear::neutral intil AutoGear::finalize;	
+	AutoGear::neutral until AutoGear::finalize;	
 } 
