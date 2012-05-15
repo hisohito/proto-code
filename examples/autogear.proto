@@ -9,6 +9,7 @@ class DefaultDriver < Driver {
 }
 
 class AutoGear << Prototype {
+
 	Driver driver = new DefaultDriver();
 	number cmd;
 	

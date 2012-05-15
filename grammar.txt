@@ -8,33 +8,46 @@ LTL:			"finally", "globally", "until", "release"
 
 buildin words:	"interface", "class", "return", "new"
 
+TODO: rename METHODS, VAR
+
+<A> = { "A" }
+
+AA
+AAAAAA
+A
+
+<TYPE> ID,
+
 == Grammar ==
 <PROGRAM> ::= { <STATEMENT> }
-<STATEMENT> ::= <INTERFACE_DESCR> | <CLASS_DESCR> | <LTL_RULE>
-<LTL_RULE> ::= "prototype" ID "(" ")" "{" { <LTL_OP> } "}"
-<LTL_OP> ::= ("finally" | "globally") ID ";" | ID ( "until" | "release" ) ID ";"
-<INTERFACE_DESCR> ::= "interface" ID "{" <METHODS> "}"
-<METHODS> ::= <TYPE> ID "(" [ {<TYPE> ID [ "," <TYPE> ID] } ] ")" ";"
-<TYPE> ::= "number" | "bool" | "string" | "object"
-<CLASS_DESCR> ::= "class" ID [ ( "<" ID [ { "," ID } ] ) | ( "<<" ID ) ] "{" { <VAR> } "}"
-<VAR> ::= <TYPE> ID  "=" <EXPRESSION> ";" | "state" ID "(" [ {<TYPE> ID [ "," <TYPE> ID] } ] ")" "{" {<STATE_BODY>} "}"
-<STATE_BODY> ::= <ASSIGNMENT> ";" | <BUILDIN_OPERATOR> | <CALL> | <IF> | <FOR> | <WHILE> | <DO>
+<STATEMENT> ::= <INTERFACE_DECL> | <CLASS_DECL> | <PROTO_DECL>
+<PROTO_DECL> ::= "prototype" ID "(" <PARAMETERS> ")" "{" { <SPEC_DECL> } "}"
+<SPEC_DECL> ::= ("finally" | "globally") ID ";" | ID ( "until" | "release" ) ID ";" ######## WRONG!
+<INTERFACE_DECL> ::= "interface" ID "{" { <METHOD_DECL> } "}"
+<METHOD_DECL> ::= <TYPE> ID "(" <ARGUMENTS> ")" ";"
+<ARGUMENTS> :: = [ <TYPE> ID { "," <TYPE> ID } ]
+<PARAMETERS> ::= [ <EXPRESSION> { "," <EXPRESSION> } ]  
+<TYPE> ::= "void" | "state" | "number" | "bool" | "string" | "object" | <ARRAY_TYPE>
+<ARRAY_TYPE> ::= <TYPE> "[" "]" { "[" "]" }
+<CLASS_DECL> ::= "class" ID # [ ( "<" ID [ { "," ID } ] ) | ( "<<" ID ) ] "{" { (<METHOD> | <FIELD>) } "}"
+<METHOD> ::= <TYPE> ID "(" <ARGUMENTS> ")" "{" { <OPERATOR> } "}"
+<FIELD> ::= <TYPE> ID [ "=" <EXPRESSION> ] ";"
+<OPERATOR> ::= <ASSIGNMENT> ";" | <BUILDIN_OPERATOR> | <CALL> ";" | <IF> | <FOR> | <WHILE> | <DO> | "{" <OPERATOR> "}"
 <BUILDIN_OPERATOR> ::= <PRINT> | <DIE> | <RETURN>
 <DIE> ::= "die" <EXPRESSION> ";"
 <PRINT> ::= "print" <EXPRESSION> ";"
 <RETURN> ::= "return" <EXPRESSION> ";"
-<ASSIGNMENT> ::= <ID> "=" <EXPRESSION>
-<CALL> ::= <ID> "(" [ <EXPRESSION> { ", " <EXPRESSION> } ] ")" ";"
+<ASSIGNMENT> ::= <ID> { "[" <EXPRESSION> "]" } "=" <EXPRESSION>
+<CALL> ::= <ID> "(" <PARAMETERS> ")"
 
-<EXPRESSION> ::= [ <EXPRESSION> ( ">" | "<" | "<=" | ">=" | "==" | "!=" ) <SUMMAND> ] ("+" <SUMMAND> | "-" <SUMMAND>)
+<EXPRESSION> ::= [ <EXPRESSION> ( ">" | "<" | "<=" | ">=" | "==" | "!=" ) <SUMMAND> ] ("+" <SUMMAND> | "-" <SUMMAND>) ####### or, and, not
 <SUMMAND> ::= [ <SUMMAND> "+" | <SUMMAND> "-" ] <MULTIPLIER>
 <MULTIPLIER> ::= [ <MULTIPLIER> "*" | <MULTIPLIER> "/" ] <SIMPLE_EXPRESSION>
-<SIMPLE_EXPRESSION> ::= <ID> | <NUMBER> | <STRING> | <CALL> | "(" <EXPRESSION> ")"
+<SIMPLE_EXPRESSION> ::= <ID> { "[" <EXPRESSION> "]" } | <NUMBER> | <STRING> | <CALL> | "[" <PARAMETERS> "]" | "(" <EXPRESSION> ")" | "nan" | "nil" | "new" ID "(" <PARAMETERS> ")" 
 
-<BODY> ::= "{" { <STATE_BODY> } "}" | <STATE_BODY>
-<IF> ::= "if" "(" <EXPRESSION> ")" <BODY> [ "else" <BODY> ]
-<FOR> ::= "for" "(" <ASSIGNMENT> ";" <EXPRESSION> ";"  <ASSIGNMENT> ")" <BODY>
-<WHILE> ::= "while" "(" <EXPRESSION> ")" <BODY>
-<DO> ::= "do" "{" { <STATE_BODY> } "}" "while" "(" <EXPRESSION> ")" ";"
+<IF> ::= "if" "(" <EXPRESSION> ")" <OPERATOR> [ "else" <OPERATOR> ]
+<FOR> ::= "for" "(" <ASSIGNMENT> ";" <EXPRESSION> ";"  <ASSIGNMENT> ")" <OPERATOR>
+<WHILE> ::= "while" "(" <EXPRESSION> ")" <OPERATOR>
+<DO> ::= "do" "{" <OPERATOR> "}" "while" "(" <EXPRESSION> ")" ";"
 
 //TODO change EXPRESSION
