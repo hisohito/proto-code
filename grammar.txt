@@ -21,16 +21,18 @@ buildin words:	"interface", "class", "return", "new"
 <STATE_BODY> ::= <ASSIGNMENT> ";" | <BUILDIN_OPERATOR> | <CALL> | <IF> | <FOR> | <WHILE> | <DO>
 <BUILDIN_OPERATOR> ::= <PRINT> | <DIE> | <RETURN>
 <DIE> ::= "die" <EXPRESSION> ";"
-<PRINT> ::= "print" "(" <EXPRESSION> ")" ";"
+<PRINT> ::= "print" <EXPRESSION> ";"
 <RETURN> ::= "return" <EXPRESSION> ";"
 <ASSIGNMENT> ::= <ID> "=" <EXPRESSION>
 <CALL> ::= <ID> "(" [ <EXPRESSION> { ", " <EXPRESSION> } ] ")" ";"
-<EXPRESSION> ::= [ <EXPRESSION> "+" | <EXPRESSION> "-" ] <SUMMAND>
+
+<EXPRESSION> ::= [ <EXPRESSION> ( ">" | "<" | "<=" | ">=" | "==" | "!=" ) <SUMMAND> ] ("+" <SUMMAND> | "-" <SUMMAND>)
 <SUMMAND> ::= [ <SUMMAND> "+" | <SUMMAND> "-" ] <MULTIPLIER>
 <MULTIPLIER> ::= [ <MULTIPLIER> "*" | <MULTIPLIER> "/" ] <SIMPLE_EXPRESSION>
 <SIMPLE_EXPRESSION> ::= <ID> | <NUMBER> | <STRING> | <CALL> | "(" <EXPRESSION> ")"
+
 <BODY> ::= "{" { <STATE_BODY> } "}" | <STATE_BODY>
-<IF> ::= "if" "(" <EXPRESSION> ")" <BODY>
+<IF> ::= "if" "(" <EXPRESSION> ")" <BODY> [ "else" <BODY> ]
 <FOR> ::= "for" "(" <ASSIGNMENT> ";" <EXPRESSION> ";"  <ASSIGNMENT> ")" <BODY>
 <WHILE> ::= "while" "(" <EXPRESSION> ")" <BODY>
 <DO> ::= "do" "{" { <STATE_BODY> } "}" "while" "(" <EXPRESSION> ")" ";"
