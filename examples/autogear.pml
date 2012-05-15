@@ -61,7 +61,7 @@ inline A1(){
 			if
 				::stateA1 = 9;
 				lastEvent = 14;
-				::stateA2 = 7;
+				::stateA1 = 7;
 				lastEvent = 13;
 			fi;
 		:: (stateA1 == 9) ->
@@ -84,10 +84,13 @@ init {
 	run Model();
 }
 
-never  {    /* !(<>{stateA1==10}) */
+never  {    /* !({stateA1==3}U{stateA1!=10}) */
 accept_init:
 T0_init:
 	if
-	:: (! ((stateA1==10))) -> goto T0_init
+	:: (! ((stateA1!=10))) -> goto T0_init
+	:: (! ((stateA1!=10)) && ! ((stateA1==3))) -> goto accept_all
 	fi;
+accept_all:
+	skip
 }

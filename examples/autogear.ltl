@@ -1,7 +1,29 @@
-never  {    /* !(<>{stateA1==10}) */
+never  {    /* !(<>{stateA1!=10}) */
 accept_init:
 T0_init:
 	if
-	:: (! ((stateA1==10))) -> goto T0_init
+	:: (! ((stateA1!=10))) -> goto T0_init
 	fi;
+}
+never  {    /* !([]<>{stateA1!=3}) */
+T0_init:
+	if
+	:: (! ((stateA1!=3))) -> goto accept_S4
+	:: (1) -> goto T0_init
+	fi;
+accept_S4:
+	if
+	:: (! ((stateA1!=3))) -> goto accept_S4
+	fi;
+}
+
+never  {    /* !({stateA1==3}U{stateA1!=10}) */
+accept_init:
+T0_init:
+	if
+	:: (! ((stateA1!=10))) -> goto T0_init
+	:: (! ((stateA1!=10)) && ! ((stateA1==3))) -> goto accept_all
+	fi;
+accept_all:
+	skip
 }
