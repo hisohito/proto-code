@@ -1,14 +1,15 @@
 header {
   // stuff that is placed at the top of <all> generated files
-  
+  == Tokens ==
+	/* 	data types:		"number", "state", , "prototype", "string", "bool", "object"
+	*	functions:		"random", "initialize", "finalize", "main"
+	*	LTL:			"finally", "globally", "until", "release"
+	*	"<", "<<", ",", ";", "+", "-", "*", "/", "=", "==", "!=", "(", ")", "]", "[", "::"
+	*	buildin words:	"interface", "class", "return", "new"
+	*/
 }
 
-== Tokens ==
-data types:		"number", "state", , "prototype", "string", "bool", "object"
-functions:		"random", "initialize", "finalize", "main"
-LTL:			"finally", "globally", "until", "release"
-"<", "<<", ",", ";", "+", "-", "*", "/", "=", "==", "!=", "(", ")", "]", "[", "::"
-buildin words:	"interface", "class", "return", "new"
+
 
 == Grammar ==
 <PROGRAM> ::= { <STATEMENT> }
