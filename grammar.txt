@@ -10,7 +10,12 @@ buildin words:	"interface", "class", "return", "new"
 <STATEMENT> ::= <INTERFACE_DECL> | <CLASS_DECL> | <PROTO_DECL>
 <PROTO_DECL> ::= "prototype" <ID> "(" <PARAMETERS> ")" "{" { <SPEC_DECL> } "}"
 
-<SPEC_DECL> ::= ("finally" | "globally") <ID> ";" | <ID> ( "until" | "release" ) <ID> ";" ######## WRONG!
+<SPEC_DECL> ::= ("finally" | "globally") <SPEC_EXPRESSION> ";" | <SPEC_EXPRESSION> ( "until" | "release" | "if" ) <SPEC_EXPRESSION> ";" ######## WRONG!
+<SPEC_EXPRESSION> ::= ( "(" <OR_SPEC> ")" ) | ( <OR_SPEC> )
+<OR_SPEC> ::= <AND_SPEC> [ "or" <AND_SPEC> ]
+<AND_SPEC> ::= <NOT_SPEC> [ "and" <NOT_SPEC> ]
+<NOT_SPEC> ::= [ "not" ] <SPEC>
+<SPEC> ::= ( <SPEC> ( ">" | "<" | "<=" | ">=" | "==" | "!=" ) <ID> ) | ( <ID> )
 
 <INTERFACE_DECL> ::= "interface" <ID> "{" { <METHOD_DECL> } "}"
 <METHOD_DECL> ::= <TYPE> <ID> "(" <ARGUMENTS> ")" ";"
