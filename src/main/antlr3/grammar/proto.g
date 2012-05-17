@@ -1,8 +1,8 @@
 grammar proto;
 
 @header {
-	package proto.grammar;
-}
+	package grammar;
+}       
 
 program
     : ( statement )* 
