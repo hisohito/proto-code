@@ -1,5 +1,9 @@
 grammar proto;
 
+@header {
+	package proto.grammar;
+}
+
 program
     : ( statement )* 
     ;
@@ -72,11 +76,11 @@ field
     ;
     
 operator
-    : assignment ';' | buildin_operator | call ';' | if | for | while | do | '{' operator '}'
+    : assignment ';' | buildin_operator | call ';' | if_operator | for_operator | while_operator | do_operator | '{' operator '}'
     ;
     
 buildin_operator
-    : print | die | return
+    : print | die | return_operator
     ;
     
 die
@@ -87,7 +91,7 @@ print
     : 'print' big_expression ';'
     ;
     
-return
+return_operator
     : 'return' big_expression ';'
     ;
     
@@ -135,19 +139,19 @@ simple_expression
     : ID ( '[' expression ']' )* | INT | STRING | call | '[' parameters ']' | '(' expression ')' | 'nan' | 'nil' | 'new' ID '(' parameters ')'
     ;
     
-if
+if_operator
     : 'if' '(' expression ')' operator ( 'else' operator )?
     ;
     
-for
+for_operator
     : 'for' '(' assignment ';' expression ';'  assignment ')' operator
     ;
     
-while
+while_operator
     : 'while' '(' expression ')' operator
     ;
     
-do
+do_operator
     : 'do' '{' operator '}' 'while' '(' expression ')' ';'
     ;
     
