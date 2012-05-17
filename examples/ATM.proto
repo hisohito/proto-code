@@ -1,13 +1,13 @@
 interface User {
 	number press(number avaliableButtons);
 }
-class DefaultUser < User {
+class DefaultUser() < User {
 	number press(number avaliableButtons) {
 		return random avaliableButtons;
 	}
 }
 
-class ATM << Prototype {
+class ATM() << Prototype {
 	User user = new DefaultUser();
 	number cmd;
 

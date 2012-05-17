@@ -7,13 +7,13 @@ interface Player {
 	number take(number things);		
 }
 
-class DefaultPlayer < Player {
+class DefaultPlayer() < Player {
 	number take(number things) {
 		return random things;
 	}
 } 
 
-class NimGame << Prototype {
+class NimGame() << Prototype {
 	
 	Player[] players = [new DefaultPlayer(), new DefaltPlayer()];
 
@@ -48,7 +48,7 @@ class NimGame << Prototype {
 	
 	state main() {
 
-		while(true) {
+		while( (6 == j) or (true or false) ) {
 			things = things - one();
 			if (things == 0) return a(); 
 			things = things - two();
@@ -58,10 +58,10 @@ class NimGame << Prototype {
 	}
 }
 
-
 prototype NimGame() {
 
-	finally NimGame::a or NimGame:b;
-	globally NimGame::a or NimGame::b or NumGame::one or NimGame::two;
-	!NimGame::a util NimGame::a; 
+	finally NimGame::a or NimGame::b;
+	globally (NimGame::a or NimGame::b) or (NumGame::one or NimGame::two);
+	(not NimGame::a) until NimGame::a; 
 // todo:	release
+}

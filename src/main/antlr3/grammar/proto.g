@@ -1,5 +1,7 @@
 grammar proto;
 
+options { output=AST; }
+
 @header {
 	package grammar;
 }       
@@ -17,11 +19,11 @@ proto_decl
     ;
 
 spec_decl
-    : ('finally' | 'globally') spec_expression ';' | spec_expression ( 'until' | 'release' | 'if' ) spec_expression ';'
+    : ('finally' | 'globally')+ spec_expression ';' | spec_expression ( 'until' | 'release' | 'if' ) spec_expression ';'
     ;
     
 spec_expression
-    : ( '(' or_spec ')' ) | ( or_spec )
+    : or_spec
     ;
     
 or_spec
@@ -36,8 +38,12 @@ not_spec
     ;
     
 spec
-    : ID ( '==' ID | '!=' ID  )*
+    : one_spec ( ( '==' | '!=' ) one_spec )*
     ;
+	
+one_spec
+    : ID | '(' spec_expression ')'
+	;
 
 interface_decl
     : 'interface' ID '{' ( method_decl )* '}'
@@ -56,7 +62,7 @@ parameters
     ;
     
 type
-    : 'void' | 'state' array | 'number' array | 'bool' array | 'string' array | 'object' array
+    : 'void' | 'state' array | 'number' array | 'bool' array | 'string' array | 'object' array | ID array
     ;
     
 array
@@ -64,7 +70,7 @@ array
     ;
     
 class_decl
-    : 'class' ID ( '<' ID ( ',' ID )* )? ( '<<' ID )? '{' ( ( method | field ) )* '}'
+    : 'class' ID '(' parameters ')' ( '<' ID ( ',' ID )* )? ( '<<' ID )? '{' ( method | field )* '}'
     ;
     
 method
@@ -76,7 +82,7 @@ field
     ;
     
 operator
-    : assignment ';' | buildin_operator | call ';' | if_operator | for_operator | while_operator | do_operator | '{' operator '}'
+    : assignment ';' | buildin_operator | call ';' | if_operator | for_operator | while_operator | do_operator | '{' ( operator )* '}'
     ;
     
 buildin_operator
@@ -136,26 +142,30 @@ multiplier
     ;
     
 simple_expression
-    : ID ( '[' expression ']' )* | INT | STRING | call | '[' parameters ']' | '(' expression ')' | 'nan' | 'nil' | 'new' ID '(' parameters ')'
+    : ID ( '[' big_expression ']' )* ( '.' call )? | INT | STRING | call | '[' array_new ']' | '(' big_expression ')' | 'nan' | 'nil' | 'new' ID '(' parameters ')' | 'random' ( ID | INT )
     ;
+	
+array_new 
+    : ( 'new' ID '(' parameters ')'  ( ',' 'new' ID '(' parameters ')' )* )?
+	;
     
 if_operator
-    : 'if' '(' expression ')' operator ( 'else' operator )?
+    : 'if' '(' big_expression ')' operator ( 'else' operator )?
     ;
     
 for_operator
-    : 'for' '(' assignment ';' expression ';'  assignment ')' operator
+    : 'for' '(' assignment ';' big_expression ';'  assignment ')' operator
     ;
     
 while_operator
-    : 'while' '(' expression ')' operator
+    : 'while' '(' big_expression ')' operator
     ;
     
 do_operator
-    : 'do' '{' operator '}' 'while' '(' expression ')' ';'
+    : 'do' '{' operator '}' 'while' '(' big_expression ')' ';'
     ;
     
-ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
+ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_'|'.'|'::')*
     ;
 
 INT :	'0'..'9'+

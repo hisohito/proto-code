@@ -2,7 +2,7 @@ interface Driver {
 	number press(number boxState);
 }
 
-class DefaultDriver < Driver {
+class DefaultDriver() < Driver {
 	number press(number boxState){
 		return random boxState;
 	}
@@ -69,7 +69,7 @@ class AutoGear() << Prototype {
 		}
 	}
 	state gear5(){
-        return gear4();
+        	return gear4();
 	}
 
 	state main(){
