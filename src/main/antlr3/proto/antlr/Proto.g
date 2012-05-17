@@ -1,9 +1,13 @@
-grammar proto;
+grammar Proto;
 
 options { output=AST; }
 
 @header {
-	package grammar;
+	package proto.antlr;
+}
+
+@lexer::header {
+	package proto.antlr;
 }       
 
 program

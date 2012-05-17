@@ -9,11 +9,27 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.DOTTreeGenerator;
 import org.antlr.stringtemplate.StringTemplate;
 
-import proto.antlr.grammar.protoLexer;
-import proto.antlr.grammar.protoParser;	
+import proto.antlr.ProtoLexer;
+import proto.antlr.ProtoParser;
 
 public class Launcher {
 
+	public static void printTree(CommonTree t, int indent) {
+		if ( t != null ) {
+			StringBuffer sb = new StringBuffer(indent);
+			
+			if (t.getParent() == null){
+				System.out.println(sb.toString() + t.getText().toString());	
+			}
+			for ( int i = 0; i < indent; i++ )
+				sb = sb.append("   ");
+			for ( int i = 0; i < t.getChildCount(); i++ ) {
+				System.out.println(sb.toString() + t.getChild(i).toString());
+				printTree((CommonTree)t.getChild(i), indent+1);
+			}
+		}
+	}
+	
 	public static void main(String[] args) throws IOException, RecognitionException {
 		// парсить командную строку
 		// создавать инстанс компилятора (+парсер, лексер, генератор)
@@ -21,9 +37,9 @@ public class Launcher {
 		// generator.generate
 
 		ANTLRFileStream fs = new ANTLRFileStream("examples/simple.proto");
-		protoLexer lexer = new protoLexer(fs);
+		ProtoLexer lexer = new ProtoLexer(fs);
 		TokenRewriteStream tokens = new TokenRewriteStream(lexer);
-		protoParser parser = new protoParser(tokens);
+		ProtoParser parser = new ProtoParser(tokens);
 		
 		System.out.println();
 
@@ -33,7 +49,11 @@ public class Launcher {
 			System.out.println("Error: " + e);
 		}
 		
-		CommonTree tree = (CommonTree)parser.program().getTree();
+		ProtoParser.program_return ret = parser.program();
+		CommonTree tree = (CommonTree)ret.getTree();
+		System.out.println(tree);
+		printTree(tree, 255);
+		
 	    DOTTreeGenerator gen = new DOTTreeGenerator();
 	    StringTemplate st = gen.toDOT(tree);
 	    //System.out.println(st);
