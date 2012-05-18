@@ -4,6 +4,11 @@ options { output=AST; }
 
 @header {
 	package proto.antlr;
+	
+	import proto.ir.ClassNode;
+	import proto.ir.MethodNode;
+	import proto.ir.StateNode;
+	import proto.ir.CallNode;
 }
 
 @lexer::header {
@@ -62,11 +67,11 @@ arguments
     ;
     
 parameters
-    : ( big_expression ( ',' big_expression )* )?
+    : ( big_expression ( ',' big_expression )* )? -> big_expression? (big_expression)?
     ;
     
 type
-    : 'void' | 'state' array -> ^('state')  | 'number' array | 'bool' array | 'string' array | 'object' array | ID array
+    : 'void' | 'state' array  | 'number' array | 'bool' array | 'string' array | 'object' array | ID array
     ;
     
 array
@@ -74,19 +79,19 @@ array
     ;
     
 class_decl
-    : 'class' ID '(' parameters ')' ( '<' ID ( ',' ID )* )? ( '<<' ID )? '{' ( method | field )* '}' -> ^(ID (method)*)
+    : 'class' ID '(' arguments ')' ( '<' ID ( ',' ID )* )? ( '<<' ID )? '{' ( method | field )* '}' -> ^(ID<ClassNode> (method)*)
     ;
     
 method
-    : type ID '(' arguments ')' '{' ( operator )* '}' -> ^(ID (operator)* )
+    : t=type ID '(' arguments ')' '{' ( operator )* '}' -> {$t.text.equals("state")}? ^(ID<StateNode> (operator)* ) -> ^(ID<MethodNode> (operator)*)
     ;
     
 field
-    : type ID ( '=' big_expression )? ';' ->
+    : type ID ( '=' big_expression )? ';'
     ;
     
 operator
-    : assignment ';' -> | buildin_operator | call ';' | if_operator -> | for_operator -> | while_operator -> | do_operator -> | '{' ( operator )* '}' 
+    : field -> | assignment ';' -> assignment | buildin_operator | call ';' -> call | if_operator | for_operator | while_operator | do_operator  | '{' ( operator )* '}' -> (operator)* 
     ;
     
 buildin_operator
@@ -94,23 +99,23 @@ buildin_operator
     ;
     
 die
-    : 'die' big_expression ';' ->
+    : 'die' big_expression ';' -> big_expression?
     ;
     
 print
-    : 'print' big_expression ';' ->
+    : 'print' big_expression ';' -> big_expression?
     ;
     
 return_operator
-    : 'return' big_expression ';'
+    : 'return' big_expression ';' -> big_expression?
     ;
     
 assignment
-    : ID ( '[' big_expression ']' )* '=' big_expression
+    : ID ( '[' big_expression ']' )* '=' big_expression -> (big_expression)*
     ;
     
 call
-    : ID '(' parameters ')' -> ^( ID )
+    : ID '(' parameters ')' -> ^( ID<CallNode> parameters? )
     ;
 
 big_expression
@@ -118,55 +123,52 @@ big_expression
     ;
     
 or_expression
-    : and_expression ( 'or' and_expression )?
+    : and_expression ( 'or' and_expression )? -> (and_expression)*
     ;
     
 and_expression
-    : not_expression ( 'and' not_expression )? 
+    : not_expression ( 'and' not_expression )? -> (not_expression)*
     ;
         
 not_expression
-    : ( 'not' )? expression
+    : ( 'not' )? expression -> expression?
     ;
     
 expression
-    : relation ( ( '==' | '!=' ) relation )* 
+    : relation ( ( '==' | '!=' ) relation )? -> (relation)* 
     ;
 
 relation
-    : summand ( ('>' | '<' | '<=' | '>=') summand )* 
+    : summand ( ('>' | '<' | '<=' | '>=') summand )? -> (summand)* 
     ;
     
 summand
-    : multiplier ( '+' multiplier | '-' multiplier )* 
+    : multiplier ( '+' multiplier | '-' multiplier )* -> (multiplier)*
     ;
     
 multiplier
-    : simple_expression ( '*' simple_expression | '/' simple_expression )* 
+    : simple_expression ( '*' simple_expression | '/' simple_expression )* -> (simple_expression)*
     ;
     
 simple_expression
-    : ID ( '[' big_expression ']' )* ( '.' call )? -> | INT -> | STRING -> | call | '[' array_new ']' -> | '(' big_expression ')' | 'nan' -> | 'nil' -> | 'new' ID '(' parameters ')' -> | 'random' ( ID | INT ) ->
+    : ID ( '[' big_expression ']' )* ( '.' call )? -> (big_expression)* (call)? | INT -> | STRING -> | call | '[' parameters ']' ->  parameters? | '(' big_expression ')' -> big_expression? | 'nan' -> | 'nil' -> | 'new' ID '(' parameters ')' -> parameters? | 'random' ( ID | INT ) ->
     ;
 	
-array_new 
-    : ( 'new' ID '(' parameters ')'  ( ',' 'new' ID '(' parameters ')' )* )?
-	;
-    
+
 if_operator
-    : 'if' '(' big_expression ')' operator ( 'else' operator )? ->
+    : 'if' '(' big_expression ')' operator ( 'else' operator )? -> big_expression? (operator)* 
     ;
     
 for_operator
-    : 'for' '(' assignment ';' big_expression ';'  assignment ')' operator ->
+    : 'for' '(' assignment ';' big_expression ';'  assignment ')' operator -> assignment big_expression? assignment operator
     ;
     
 while_operator
-    : 'while' '(' big_expression ')' operator ->
+    : 'while' '(' big_expression ')' operator -> big_expression? operator
     ;
     
 do_operator
-    : 'do' '{' operator '}' 'while' '(' big_expression ')' ';' ->
+    : 'do' '{' operator '}' 'while' '(' big_expression ')' ';' -> operator big_expression?
     ;
     
 ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_'|'.'|'::')*

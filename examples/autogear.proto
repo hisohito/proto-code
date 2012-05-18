@@ -22,7 +22,7 @@ class AutoGear() << Prototype {
 	}
 
 	state neutral(){
-		cmd = driver.press(3);
+		number cmd = driver.press(3);
 		if (cmd == 1){// engine turn off selected
 	        return finalize();
 		} else if (cmd == 2){ // reverse selected				
@@ -53,7 +53,7 @@ class AutoGear() << Prototype {
 		}
 	}
 	state gear3(){
-	       cmd = driver.press(2);
+	    cmd = driver.press(2);
 		if (cmd == 1){
 			return gear2();
 		} else {
@@ -61,7 +61,7 @@ class AutoGear() << Prototype {
 		}
 	}
 	state gear4(){
-	        cmd = driver.press(2);
+	    cmd = driver.press(2);
 		if (cmd == 1){
 			return gear3();
 		} else {
