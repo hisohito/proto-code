@@ -19,13 +19,13 @@ public class Launcher {
 			StringBuffer sb = new StringBuffer(indent);
 			
 			if (t.getParent() == null){
-				System.out.println(sb.toString() + t.getText().toString());	
+				System.out.println(sb.toString() + t.getText());	
 			}
 			for ( int i = 0; i < indent; i++ )
 				sb = sb.append("   ");
 			for ( int i = 0; i < t.getChildCount(); i++ ) {
-				System.out.println(sb.toString() + t.getChild(i).toString());
-				printTree((CommonTree)t.getChild(i), indent+1);
+				System.out.println(sb.toString() + t.getChild(i));
+				printTree((CommonTree)t.getChild(i), indent + 1);
 			}
 		}
 	}
@@ -43,20 +43,22 @@ public class Launcher {
 		
 		System.out.println();
 
-		try {
-			parser.program();
-		} catch (Exception e) {
-			System.out.println("Error: " + e);
-		}
-		
+//		try {
+//			parser.program();
+//		} catch (Exception e) {
+//			System.out.println("Error: " + e);
+//		}
+//		
 		ProtoParser.program_return ret = parser.program();
 		CommonTree tree = (CommonTree)ret.getTree();
-		System.out.println(tree);
-		printTree(tree, 255);
+		//System.out.println(tree);
+		printTree(tree, 0);
+		
+		//System.err.println(tree.toStringTree());
 		
 	    DOTTreeGenerator gen = new DOTTreeGenerator();
 	    StringTemplate st = gen.toDOT(tree);
-	    //System.out.println(st);
+	    System.out.println(st);
 
 		//TinyCompiler protoc = new TinyCompiler();
 

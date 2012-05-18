@@ -19,7 +19,7 @@ statement
     ;
     
 proto_decl
-    : 'prototype' ID '(' parameters ')' '{' ( spec_decl )* '}'
+    : 'prototype' ID '(' parameters ')' '{' ( spec_decl )* '}' ->
     ;
 
 spec_decl
@@ -50,7 +50,7 @@ one_spec
 	;
 
 interface_decl
-    : 'interface' ID '{' ( method_decl )* '}'
+    : 'interface' ID '{' ( method_decl )* '}' ->
     ;
     
 method_decl
@@ -66,7 +66,7 @@ parameters
     ;
     
 type
-    : 'void' | 'state' array | 'number' array | 'bool' array | 'string' array | 'object' array | ID array
+    : 'void' | 'state' array -> ^('state')  | 'number' array | 'bool' array | 'string' array | 'object' array | ID array
     ;
     
 array
@@ -74,19 +74,19 @@ array
     ;
     
 class_decl
-    : 'class' ID '(' parameters ')' ( '<' ID ( ',' ID )* )? ( '<<' ID )? '{' ( method | field )* '}'
+    : 'class' ID '(' parameters ')' ( '<' ID ( ',' ID )* )? ( '<<' ID )? '{' ( method | field )* '}' -> ^(ID (method)*)
     ;
     
 method
-    : type ID '(' arguments ')' '{' ( operator )* '}'
+    : type ID '(' arguments ')' '{' ( operator )* '}' -> ^(ID (operator)* )
     ;
     
 field
-    : type ID ( '=' big_expression )? ';'
+    : type ID ( '=' big_expression )? ';' ->
     ;
     
 operator
-    : assignment ';' | buildin_operator | call ';' | if_operator | for_operator | while_operator | do_operator | '{' ( operator )* '}'
+    : assignment ';' -> | buildin_operator | call ';' | if_operator -> | for_operator -> | while_operator -> | do_operator -> | '{' ( operator )* '}' 
     ;
     
 buildin_operator
@@ -94,11 +94,11 @@ buildin_operator
     ;
     
 die
-    : 'die' big_expression ';'
+    : 'die' big_expression ';' ->
     ;
     
 print
-    : 'print' big_expression ';'
+    : 'print' big_expression ';' ->
     ;
     
 return_operator
@@ -110,7 +110,7 @@ assignment
     ;
     
 call
-    : ID '(' parameters ')'
+    : ID '(' parameters ')' -> ^( ID )
     ;
 
 big_expression
@@ -122,7 +122,7 @@ or_expression
     ;
     
 and_expression
-    : not_expression ( 'and' not_expression )?
+    : not_expression ( 'and' not_expression )? 
     ;
         
 not_expression
@@ -130,23 +130,23 @@ not_expression
     ;
     
 expression
-    : relation ( ( '==' | '!=' ) relation )*
+    : relation ( ( '==' | '!=' ) relation )* 
     ;
 
 relation
-    : summand ( ('>' | '<' | '<=' | '>=') summand )*
+    : summand ( ('>' | '<' | '<=' | '>=') summand )* 
     ;
     
 summand
-    : multiplier ( '+' multiplier | '-' multiplier )*
+    : multiplier ( '+' multiplier | '-' multiplier )* 
     ;
     
 multiplier
-    : simple_expression ( '*' simple_expression | '/' simple_expression )*
+    : simple_expression ( '*' simple_expression | '/' simple_expression )* 
     ;
     
 simple_expression
-    : ID ( '[' big_expression ']' )* ( '.' call )? | INT | STRING | call | '[' array_new ']' | '(' big_expression ')' | 'nan' | 'nil' | 'new' ID '(' parameters ')' | 'random' ( ID | INT )
+    : ID ( '[' big_expression ']' )* ( '.' call )? -> | INT -> | STRING -> | call | '[' array_new ']' -> | '(' big_expression ')' | 'nan' -> | 'nil' -> | 'new' ID '(' parameters ')' -> | 'random' ( ID | INT ) ->
     ;
 	
 array_new 
@@ -154,19 +154,19 @@ array_new
 	;
     
 if_operator
-    : 'if' '(' big_expression ')' operator ( 'else' operator )?
+    : 'if' '(' big_expression ')' operator ( 'else' operator )? ->
     ;
     
 for_operator
-    : 'for' '(' assignment ';' big_expression ';'  assignment ')' operator
+    : 'for' '(' assignment ';' big_expression ';'  assignment ')' operator ->
     ;
     
 while_operator
-    : 'while' '(' big_expression ')' operator
+    : 'while' '(' big_expression ')' operator ->
     ;
     
 do_operator
-    : 'do' '{' operator '}' 'while' '(' big_expression ')' ';'
+    : 'do' '{' operator '}' 'while' '(' big_expression ')' ';' ->
     ;
     
 ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_'|'.'|'::')*
