@@ -4,19 +4,26 @@ options { output=AST; }
 
 @header {
 	package proto.antlr;
-	
 	import proto.ir.ClassNode;
 	import proto.ir.MethodNode;
 	import proto.ir.StateNode;
 	import proto.ir.CallNode;
+	import java.util.HashMap;
+	import java.util.LinkedList;
+	import java.util.Stack;
 }
 
 @lexer::header {
 	package proto.antlr;
 }       
 
+@members {
+	Stack<HashMap<String, String>> scope = new Stack<HashMap<String, String>>() {{}};
+	String scp;
+}
+
 program
-    : ( statement )* 
+    : ( statement )*
     ;
     
 statement
@@ -63,7 +70,7 @@ method_decl
     ;
     
 arguments
-    : ( type ID ( ',' type ID )* )?
+    : ( t=type i=ID { if(!scope.isEmpty()) scope.peek().put($i.text, $t.text); } ( ',' t=type i=ID { scope.peek().put($i.text, $t.text); } )* )?
     ;
     
 parameters
@@ -79,15 +86,15 @@ array
     ;
     
 class_decl
-    : 'class' ID '(' arguments ')' ( '<' ID ( ',' ID )* )? ( '<<' ID )? '{' ( method | field )* '}' -> ^(ID<ClassNode> (method)*)
+    : 'class' i=ID '(' arguments ')' ( '<' ID ( ',' ID )* )? ( '<<' ID )? '{' { scope.push(new HashMap<String, String>()); scope.peek().put("self", $i.text); } ( method | field )* {scope.pop();} '}' -> ^(ID<ClassNode> (method)*)
     ;
     
 method
-    : t=type ID '(' arguments ')' '{' ( operator )* '}' -> {$t.text.equals("state")}? ^(ID<StateNode> (operator)* ) -> ^(ID<MethodNode> (operator)*)
+    : t=type ID { String classname = scope.peek().get("self"); scope.push(new HashMap<String, String>()); scope.peek().put("self", classname); } '(' arguments ')' '{' ( operator )* '}' {scope.pop();} -> {$t.text.equals("state")}? ^(ID<StateNode>[$ID, scope.peek().get("self")] (operator)* ) -> ^(ID<MethodNode>[$ID, scope.peek().get("self")] (operator)*)
     ;
     
 field
-    : type ID ( '=' big_expression )? ';'
+    : t=type i=ID { scope.peek().put($i.text, $t.text); } ( '=' big_expression )? ';'
     ;
     
 operator
@@ -115,7 +122,8 @@ assignment
     ;
     
 call
-    : ID '(' parameters ')' -> ^( ID<CallNode> parameters? )
+    : i=ID '(' parameters ')' { if($i.text.contains(".")) { String fname = $i.text.substring($i.text.indexOf('.')); scp= ""; } else { scp = scope.peek().get("self"); } } 
+    						-> ^( ID<CallNode>[$ID, scp] parameters? )
     ;
 
 big_expression

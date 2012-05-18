@@ -4,16 +4,9 @@ import java.io.IOException;
 
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.RecognitionException;
-import org.antlr.runtime.TokenRewriteStream;
-import org.antlr.runtime.tree.CommonTree;
-import org.antlr.runtime.tree.DOTTreeGenerator;
-import org.antlr.stringtemplate.StringTemplate;
 
-import proto.antlr.ProtoLexer;
-import proto.antlr.ProtoParser;
-import proto.core.TinyCompiler;
 import proto.core.Compiler;
-
+import proto.core.TinyCompiler;
 
 public class Launcher {
 
@@ -23,10 +16,11 @@ public class Launcher {
 		// запускать compiler.compile
 		// generator.generate
 
+		String s = "asd";
+		
 		ANTLRFileStream fs = new ANTLRFileStream("examples/simple.proto");
 
 		Compiler protoc = new TinyCompiler();
 		System.out.print(protoc.compile(fs));
-		
 	}
 }
