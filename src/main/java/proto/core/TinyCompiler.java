@@ -18,7 +18,7 @@ public class TinyCompiler extends AbstractCompiler implements Compiler {
 			StringBuffer sb = new StringBuffer(indent);
 
 			if (t.getParent() == null) {
-				System.out.println(sb.toString() + t.getText());
+				System.out.println(sb.toString() + t.getText()+"--");
 			}
 			for (int i = 0; i < indent; i++)
 				sb = sb.append("   ");
@@ -34,6 +34,7 @@ public class TinyCompiler extends AbstractCompiler implements Compiler {
 		ProtoParser parser = new ProtoParser(new TokenRewriteStream(new ProtoLexer(fs)));
 		CommonTree tree = (CommonTree) parser.program().getTree();
 
+		printTree(tree, 0);
 		Automata ir = compile0(tree);
 
 		Generator generator = new PromelaGenerator();

@@ -132,7 +132,7 @@ return_operator
     ;
     
 assignment
-    : i=ID {System.out.println("assignment "+$i.text);} ( '[' big_expression ']' )* '=' big_expression -> (big_expression)*
+    : ID ( '[' big_expression ']' )* '=' big_expression -> (big_expression)*
     ;
     
 big_expression
