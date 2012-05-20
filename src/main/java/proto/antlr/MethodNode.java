@@ -7,7 +7,7 @@ import org.antlr.runtime.tree.CommonTree;
 public class MethodNode extends CommonTree {
 
 	String classname;
-	
+
 	public MethodNode(int ttype) {
 		token = new CommonToken(ttype, "");
 	}
@@ -16,12 +16,12 @@ public class MethodNode extends CommonTree {
 		token = t;
 	}
 
-	public MethodNode(int ttype, Token t, String cname){
+	public MethodNode(int ttype, Token t, String cname) {
 		token = t;
 		this.classname = cname;
 	}
-	
+
 	public String toString() {
-		return this.classname+"::"+(token!=null?token.getText():"")+"<MethodNode>;";
+		return this.classname + "::" + (token != null ? token.getText() : "");
 	}
 }

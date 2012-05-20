@@ -8,12 +8,16 @@ class DefaultDriver() < Driver {
 		return 0;
 	}
 	
-	state waste1(){
+	state waste2(){
 		return 0;
 	}
 	
+	number another_not_state(){
+		waste2();
+	}
+	
 	number not_state(){
-		waste1();
+		return another_not_state();
 	}
 	
 	number press(number boxState){

@@ -5,7 +5,7 @@ import org.antlr.runtime.Token;
 import org.antlr.runtime.tree.CommonTree;
 
 public class ClassNode extends CommonTree {
-	
+
 	public ClassNode(int ttype) {
 		token = new CommonToken(ttype, "");
 	}
@@ -15,6 +15,6 @@ public class ClassNode extends CommonTree {
 	}
 
 	public String toString() {
-		return (token!=null?token.getText():"")+"<ClassNode>;";
+		return (token != null ? token.getText() : "");
 	}
 }

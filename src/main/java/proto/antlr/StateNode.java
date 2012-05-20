@@ -16,13 +16,12 @@ public class StateNode extends CommonTree {
 		token = t;
 	}
 
-	public StateNode(int ttype,Token t, String cname) {
+	public StateNode(int ttype, Token t, String cname) {
 		token = t;
 		this.classname = cname;
 	}
 
 	public String toString() {
-		return classname + "::" + (token != null ? token.getText() : "")
-				+ "<StateNode>;";
+		return classname + "::" + (token != null ? token.getText() : "");
 	}
 }
