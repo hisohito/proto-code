@@ -54,32 +54,26 @@ public abstract class AbstractCompiler implements Compiler {
 
 					if (automata.hasState(current)) {
 						// это вызов узла состояния -> делаем переход
-						CommonTree parent = (CommonTree) currentNode
-								.getParent();
+						CommonTree parent = (CommonTree) currentNode.getParent();
 						String from = parent.toString();
 						if (automata.hasState(from)) {
-							System.out.println("[Add path from " + from
-									+ " to " + current + "]");
+//							System.out.println("[Add path from " + from		+ " to " + current + "]");
 							automata.addPath(from, current);
 						}
 					} else {
 						// это левый вызов - приводит ли он к состоянию?
 						// найти узел "метод" с таким же именем и классом
-						Collection<String> resolve = resolveCall(tree, current,
-								automata);
+						Collection<String> resolve = resolveCall(tree, current,	automata);
 						if (resolve != null) {
 							// в методе просмотреть все <call>
 							for (String r : resolve) {
-								CommonTree fromNode = (CommonTree) currentNode
-										.getParent();
+								CommonTree fromNode = (CommonTree) currentNode.getParent();
 								while (!(fromNode instanceof StateNode)) {
-									fromNode = (CommonTree) fromNode
-											.getParent();
+									fromNode = (CommonTree) fromNode.getParent();
 								}
 								String from = fromNode.toString();
 								if (automata.hasState(from)) {
-									System.out.println("[Add path from " + from
-											+ " to " + r + "]");
+//									System.out.println("[Add path from " + from	+ " to " + r + "]");
 									automata.addPath(from, r);
 								}
 							}
@@ -97,9 +91,7 @@ public abstract class AbstractCompiler implements Compiler {
 		List<String> list = new ArrayList<String>();
 		// находим соотв метод нод
 		CommonTree methodNode;
-		System.out.println(id);
 		methodNode = this.getSubTree(this.mainTree, id);
-		System.out.println(methodNode);
 
 		// если детей нет - вернем нул
 		if (methodNode == null || methodNode.getChildCount() == 0) {
@@ -115,8 +107,7 @@ public abstract class AbstractCompiler implements Compiler {
 				if (automata.hasState(callName)) {
 					list.add(callName);
 				} else {
-					List<String> addList = (List<String>) resolveCall(tree,
-							callName, automata);
+					List<String> addList = (List<String>) resolveCall(tree,	callName, automata);
 					list.addAll(addList);
 				}
 			}
@@ -129,15 +120,7 @@ public abstract class AbstractCompiler implements Compiler {
 		Automata automata = new Automata();
 		findStates(tree, automata);
 		formPaths(tree, automata);
-
-		for (String state : automata.states()) {
-			System.out.println(state);
-			if (automata.paths(state) != null) {
-				for (String path : automata.paths(state)) {
-					System.out.println("\t" + path);
-				}
-			}
-		}
+//		automata.print();
 		return automata;
 	}
 }

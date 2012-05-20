@@ -25,7 +25,6 @@ public final class Automata {
 	}
 	
 	public Collection<String> paths(String state) {
-//		System.out.println("PATHS: "+paths);
 		return paths.get(state);
 	}
 	
@@ -48,7 +47,14 @@ public final class Automata {
 		return states.contains(id);
 	}
 
-	public String toString() {
-		return null;
+	public void print() {
+		for (String state : this.states()) {
+			System.out.println(state);
+			if (this.paths(state) != null) {
+				for (String path : this.paths(state)) {
+					System.out.println("\t" + path);
+				}
+			}
+		}
 	}
 }

@@ -31,8 +31,7 @@ public class TinyCompiler extends AbstractCompiler implements Compiler {
 
 	public String compile(ANTLRFileStream fs) throws RecognitionException {
 
-		ProtoParser parser = new ProtoParser(new TokenRewriteStream(
-				new ProtoLexer(fs)));
+		ProtoParser parser = new ProtoParser(new TokenRewriteStream(new ProtoLexer(fs)));
 		CommonTree tree = (CommonTree) parser.program().getTree();
 
 		Automata ir = compile0(tree);
