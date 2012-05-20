@@ -12,15 +12,15 @@ public class Launcher {
 
 	public static void main(String[] args) throws IOException, RecognitionException {
 		// парсить командную строку
-		// создавать инстанс компилятора (+парсер, лексер, генератор)
-		// запускать compiler.compile
+		// + создавать инстанс компилятора (+парсер, лексер, генератор)
+		// + запускать compiler.compile
 		// generator.generate
 
-		String s = "asd";
-		
 		ANTLRFileStream fs = new ANTLRFileStream("examples/simple.proto");
 
-		Compiler protoc = new TinyCompiler();
-		System.out.print(protoc.compile(fs));
+		Compiler compiler = new TinyCompiler();
+		String output = compiler.compile(fs);
+		
+		System.err.println(output);
 	}
 }

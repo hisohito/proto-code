@@ -1,7 +1,7 @@
 package proto.generator;
 
+import proto.ir.Automata;
+
 public interface Generator {
-	public Object generate();
+	public String generate(Automata automata);
 }
-// на вход ir
-// на выход promela

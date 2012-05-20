@@ -7,8 +7,11 @@ import org.antlr.runtime.tree.CommonTree;
 
 import proto.antlr.ProtoLexer;
 import proto.antlr.ProtoParser;
+import proto.generator.Generator;
+import proto.generator.PromelaGenerator;
+import proto.ir.Automata;
 
-public class TinyCompiler implements Compiler {
+public class TinyCompiler extends AbstractCompiler implements Compiler {
 
 	public static void printTree(CommonTree t, int indent) {
 		if (t != null) {
@@ -26,29 +29,14 @@ public class TinyCompiler implements Compiler {
 		}
 	}
 
-	public Object compile(ANTLRFileStream fs) throws RecognitionException {
+	public String compile(ANTLRFileStream fs) throws RecognitionException {
 
-		// TODO Auto-generated method stub
-		ProtoLexer lexer = new ProtoLexer(fs);
-		TokenRewriteStream tokens = new TokenRewriteStream(lexer);
-		ProtoParser parser = new ProtoParser(tokens);
-		ProtoParser.program_return ret = parser.program();
-		CommonTree tree = (CommonTree) ret.getTree();
-		printTree(tree, 0);
+		ProtoParser parser = new ProtoParser(new TokenRewriteStream(new ProtoLexer(fs)));
+		CommonTree tree = (CommonTree) parser.program().getTree();
 
-		// try {
-		// parser.program();
-		// } catch (Exception e) {
-		// System.out.println("Error: " + e);
-		// }
-		//
+		Automata ir = compile0(tree);
 
-		// System.err.println(tree.toStringTree());
-
-		// DOTTreeGenerator gen = new DOTTreeGenerator();
-		// StringTemplate st = gen.toDOT(tree);
-		// System.out.println(st);
-
-		return null;
+		Generator generator = new PromelaGenerator();
+		return generator.generate(ir);
 	}
 }
