@@ -1,0 +1,19 @@
+interface Driver {
+	number press(number boxState);
+}
+
+class DefaultDriver() < Driver {
+	number press(number boxState){
+		return random boxState;
+	}
+}
+
+class AutoGear() << Prototype {
+
+	DefaultDriver driver = new DefaultDriver();
+	number cmd;
+
+	state main(){
+		number cmd = driver.press(3);
+	}
+}
