@@ -7,6 +7,9 @@ import java.util.List;
 import org.antlr.runtime.tree.CommonTree;
 
 import proto.antlr.CallNode;
+import proto.antlr.ProtoParser.return_operator_return;
+import proto.antlr.PrototypeNode;
+import proto.antlr.SpecNode;
 import proto.antlr.StateNode;
 import proto.ir.Automata;
 
@@ -53,7 +56,7 @@ public abstract class AbstractCompiler implements Compiler {
 						continue;
 
 					if (automata.hasState(current)) {
-						// это вызов узла состояния -> делаем переход
+						// this is call if StateNode -> ad path to automata
 						CommonTree parent = (CommonTree) currentNode.getParent();
 						String from = parent.toString();
 						if (automata.hasState(from)) {
@@ -61,11 +64,10 @@ public abstract class AbstractCompiler implements Compiler {
 							automata.addPath(from, current);
 						}
 					} else {
-						// это левый вызов - приводит ли он к состоянию?
-						// найти узел "метод" с таким же именем и классом
+						// if it is MethodCall - check if there are StateNodes in his depth
 						Collection<String> resolve = resolveCall(tree, current,	automata);
 						if (resolve != null) {
-							// в методе просмотреть все <call>
+							// check all CallNode's in method
 							for (String r : resolve) {
 								CommonTree fromNode = (CommonTree) currentNode.getParent();
 								while (!(fromNode instanceof StateNode)) {
@@ -77,31 +79,49 @@ public abstract class AbstractCompiler implements Compiler {
 									automata.addPath(from, r);
 								}
 							}
-						} // если нет их - он нам не интересен
+						}
 					}
-				}
+				} else if (currentNode instanceof PrototypeNode){
+					formSpec(currentNode, automata);
+					break;
+				} 
 				formPaths((CommonTree) tree.getChild(i), automata);
 			}
 		}
 	}
 
+	private String formSpec (CommonTree tree, Automata automata){
+		if (tree != null) {
+			String result = "";
+			for (int i = 0; i < tree.getChildCount(); i++) {
+				CommonTree current = (CommonTree) tree.getChild(i);
+				result = current.toString()+" ";
+				for (int j = 0; j < current.getChildCount(); j++) {
+					result += current.getChild(j).toString() +" ";
+					if (current.getChild(j).getChildCount() != 0){
+						result = formSpec((CommonTree) current.getChild(j),automata)+" ";
+					}
+				}
+				automata.addSpec(result);
+			}
+		}
+		return "";
+	}
+	
 	private Collection<String> resolveCall(CommonTree tree, String id,
 			Automata automata) {
-		// создать пустой список
 		List<String> list = new ArrayList<String>();
-		// находим соотв метод нод
-		CommonTree methodNode;
-		methodNode = this.getSubTree(this.mainTree, id);
+		// find exactly this MethodNode in tree
+		CommonTree methodNode = this.getSubTree(this.mainTree, id);
 
-		// если детей нет - вернем нул
+		// if there is no childs - :`-(
 		if (methodNode == null || methodNode.getChildCount() == 0) {
 			return null;
 		} else {
-			// для всех детей метод нода:
-			// 1. если кол в состояние - добавить в список
-			// 2. если кол в простой метод - добавить в список то что вернет
-			// запускаемый рекурсивно вызов resolveCall
-			// вернуть список
+			// for all node childs:
+			// 1. if it is CallNode to StateNode - add to list
+			// 2. if it is CallNode to MethodNode - add to list recursive work result
+			// return list
 			for (Object child : methodNode.getChildren()) {
 				String callName = child.toString();
 				if (automata.hasState(callName)) {
@@ -114,13 +134,14 @@ public abstract class AbstractCompiler implements Compiler {
 		}
 		return list;
 	}
+	
+	
 
 	protected Automata compile0(CommonTree tree) {
 		mainTree = tree;
 		Automata automata = new Automata();
 		findStates(tree, automata);
 		formPaths(tree, automata);
-//		automata.print();
 		return automata;
 	}
 }

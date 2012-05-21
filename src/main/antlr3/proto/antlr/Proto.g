@@ -40,8 +40,8 @@ proto_decl
     ;
 
 spec_decl
-    : UNARY_SPEC+ spec_expression ';' -> ^(UNARY_SPEC<SpecNode> UNARY_SPEC* spec_expression)
-    | spec_expression BINARY_SPEC spec_expression ';' -> ^(BINARY_SPEC<SpecNode> spec_expression  spec_expression)
+    : UNARY_SPEC+ '{' spec_expression '}' ';' -> ^(UNARY_SPEC<SpecNode> UNARY_SPEC* '{' spec_expression '}' )
+    | '{' spec_expression '}' BINARY_SPEC '{' spec_expression '}' ';' -> ^('{'<SpecNode> spec_expression '}' BINARY_SPEC '{' spec_expression '}')
     ;
     
 UNARY_SPEC
@@ -77,7 +77,7 @@ spec
     
 one_spec
     : ID -> ID<SpecNode> 
-    | '(' spec_expression ')' -> spec_expression?
+    | '(' spec_expression ')' -> '(' spec_expression? ')'
 	;
 
 interface_decl

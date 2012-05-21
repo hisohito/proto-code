@@ -19,7 +19,8 @@ public class Launcher {
 		ANTLRFileStream fs = new ANTLRFileStream("examples/simple.proto");
 
 		Compiler compiler = new TinyCompiler();
-		String output = compiler.compile(fs);
+		String output = "";
+		output = compiler.compile(fs);
 		
 		System.err.println(output);
 	}

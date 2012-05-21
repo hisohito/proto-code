@@ -10,22 +10,24 @@ import java.util.Set;
 public final class Automata {
 	private Set<String> states;
 	private Map<String, Set<String>> paths;
+	private Set<String> LTLSpec;
 	
 	public Automata() {
 		states = new HashSet<String>();
 		paths = new HashMap<String, Set<String>>();
+		LTLSpec = new HashSet<String>();
 	}
 	
 	public void addState(String id) {
 		states.add(id);
 	}
 	
-	public Collection<String> states() {
-		return Collections.unmodifiableSet(states);
+	public boolean hasState(String id) {
+		return states.contains(id);
 	}
 	
-	public Collection<String> paths(String state) {
-		return paths.get(state);
+	public Collection<String> states() {
+		return Collections.unmodifiableSet(states);
 	}
 	
 	public void addPath(String fromId, String toId) {
@@ -39,14 +41,22 @@ public final class Automata {
 		}
 	}
 	
+	public Collection<String> paths(String state) {
+		return paths.get(state);
+	}
+	
 	public boolean hasPath(String fromId, String toId) {
 		return paths.get(fromId).contains(toId);
 	}
-	
-	public boolean hasState(String id) {
-		return states.contains(id);
-	}
 
+	public void addSpec(String id) {
+		LTLSpec.add(id);
+	}
+	
+	public Collection<String> specs() {
+		return Collections.unmodifiableSet(LTLSpec);
+	}
+	
 	public void print() {
 		for (String state : this.states()) {
 			System.out.println(state);

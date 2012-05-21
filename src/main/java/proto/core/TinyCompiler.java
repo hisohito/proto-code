@@ -33,7 +33,7 @@ public class TinyCompiler extends AbstractCompiler implements Compiler {
 
 		ProtoParser parser = new ProtoParser(new TokenRewriteStream(new ProtoLexer(fs)));
 		CommonTree tree = (CommonTree) parser.program().getTree();
-		printTree(tree, 0);
+
 		Automata ir = compile0(tree);
 
 		Generator generator = new PromelaGenerator();

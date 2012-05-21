@@ -98,7 +98,8 @@ class AutoGear() << Prototype {
 }
 
 prototype AutoGear() {
-	finally AutoGear::finalize;
-	globally finally (AutoGear::neutral);
-	AutoGear::neutral until AutoGear::finalize;	
+	finally{AutoGear::finalize} ;
+	globally finally{(AutoGear::neutral)};
+	{AutoGear::neutral}until{AutoGear::finalize};	
+	finally{(AutoGear::gear1 and AutoGear::gear2)};
 } 

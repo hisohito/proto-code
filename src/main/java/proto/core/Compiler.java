@@ -1,5 +1,7 @@
 package proto.core;
 
+import java.io.IOException;
+
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.RecognitionException;
 
