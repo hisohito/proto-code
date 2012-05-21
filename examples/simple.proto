@@ -1,85 +1,62 @@
-interface Driver {
-	number press(number boxState);
+//
+// DATA TYPES: state, bool, sting, object
+//
+//
+
+interface Player {
+	number take(number things);		
 }
 
-class DefaultDriver() < Driver {
-	number press(number boxState){
-		return random boxState;
+class DefaultPlayer() < Player {
+	number take(number things) {
+		return random things;
 	}
-}
-
-class AutoGear() << Prototype {
-
-	DefaultDriver driver = new DefaultDriver();
-	number cmd;
-
-	state finalize() {
-		return "End of work";
-	}
-
-	state sleep() {
-		return neutral();
-	}
-
-	state neutral(){
-		number cmd = driver.press(3);
-		if (cmd == 1){// engine turn off selected
-	        return finalize();
-		} else if (cmd == 2){ // reverse selected				
-			return reverse();			
-		} else { // forward selected
-			return gear1();
-		}
-	}
-
-	state reverse(){
-		return neutral();
-	}
-
-	state gear1(){
-		cmd = driver.press(2);
-		if (cmd == 1){
-			return neutral();
-		} else {
-			return gear2();
-		}
-	}
-	state gear2(){
-		cmd = driver.press(2);
-		if (cmd == 1){
-			return gear1();
-		} else {
-			return gear3();
-		}
-	}
-	state gear3(){
-	    cmd = driver.press(2);
-		if (cmd == 1){
-			return gear2();
-		} else {
-			return gear4();
-		}
-	}
-	state gear4(){
-	    cmd = driver.press(2);
-		if (cmd == 1){
-			return gear3();
-		} else {
-			return gear5();
-		}
-	}
-	state gear5(){
-        	return gear4();
-	}
-
-	state main(){
-		return sleep();
-	}
-}
-
-prototype AutoGear() {
-	finally{AutoGear::finalize};
-	globally finally{(AutoGear::neutral)};
-	{AutoGear::neutral}until{AutoGear::finalize};	
-	finally{(AutoGear::gear1 and AutoGear::gear2)};
 } 
+
+class NimGame() << Prototype {
+	
+	Player[] players = [new DefaultPlayer(), new DefaltPlayer()];
+
+	number things = random 100;
+
+	state a() {
+		// "The first player won!"
+		return finalize();
+	}
+
+	state b() {
+		// "The second player won!"
+		return finalize();
+	}
+	
+	state finalize() {
+
+	}
+
+	state one() {
+		return main();
+	}
+
+
+	state two() {
+		return main();
+	}
+	
+	
+	state main() {
+
+		while( (6 == j) or (true or false) ) {
+			things = things - one();
+			if (things == 0) return a(); 
+			things = things - two();
+			if (things == 0) return b();			
+		}
+
+	}
+}
+
+prototype NimGame() {
+
+	finally { NimGame::a or NimGame::b};
+	{not NimGame::two} until {NimGame::a}; 
+}

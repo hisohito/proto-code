@@ -53,11 +53,11 @@ public class PromelaGenerator implements Generator {
 			// send string to spin
 			oneSpec.insert(0, "!(");
 			oneSpec.append(")");
-			System.out.println("Get spec: " + oneSpec.toString());
 
 			Runtime rt = Runtime.getRuntime();
 			Process proc;
 			try {
+//				System.out.println("spin.exe -f \"" + oneSpec.toString()+"\"");
 				proc = rt.exec("spin.exe -f \"" + oneSpec.toString()+"\"");
 				int exitVal = proc.waitFor();
 
@@ -117,6 +117,9 @@ public class PromelaGenerator implements Generator {
 				output.append("\t\t\tfi;\n");
 			} else {
 				output.append("\t\t\tprintf(\"" + state + "\");\n");
+				if (state.indexOf("finalize") != -1){
+					output.append("\t\t\tbreak;\n");
+				}
 			}
 		}
 		// body end
