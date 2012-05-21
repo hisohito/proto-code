@@ -99,6 +99,6 @@ class AutoGear() << Prototype {
 
 prototype AutoGear() {
 	finally AutoGear::finalize;
-	globally finally AutoGear::neutral;
+	globally finally (AutoGear::neutral);
 	AutoGear::neutral until AutoGear::finalize;	
 } 

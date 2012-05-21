@@ -8,6 +8,8 @@ options { output=AST; }
 	import proto.antlr.MethodNode;
 	import proto.antlr.StateNode;
 	import proto.antlr.CallNode;
+	import proto.antlr.PrototypeNode;
+	import proto.antlr.SpecNode;
 	import java.util.HashMap;
 	import java.util.LinkedList;
 	import java.util.Stack;
@@ -31,15 +33,23 @@ statement
     ;
     
 proto_decl
-    : 'prototype' ID '(' parameters ')' '{' ( spec_decl )* '}' ->
+    : 'prototype' ID '(' parameters ')' '{' ( spec_decl )* '}' -> ^(ID<PrototypeNode> ( spec_decl )* )
     ;
 
 spec_decl
-    : ('finally' | 'globally')+ spec_expression ';' | spec_expression ( 'until' | 'release' | 'if' ) spec_expression ';'
+    : UNARY_SPEC+ spec_expression ';' -> ^(UNARY_SPEC<SpecNode> UNARY_SPEC* spec_expression) | spec_expression BINARY_SPEC spec_expression ';' -> ^(BINARY_SPEC<SpecNode> spec_expression  spec_expression)
+    ;
+    
+UNARY_SPEC
+    : 'finally' | 'globally'
+    ;
+    
+BINARY_SPEC
+    : 'until' | 'release' | 'if'
     ;
     
 spec_expression
-    : or_spec
+    : or_spec -> or_spec
     ;
     
 or_spec
@@ -54,11 +64,11 @@ not_spec
     ;
     
 spec
-    : one_spec ( ( '==' | '!=' ) one_spec )*
+    : one_spec ( '==' | '!=' one_spec )*
     ;
-	
+    
 one_spec
-    : ID | '(' spec_expression ')'
+    : ID -> ID<SpecNode> | '(' spec_expression ')' -> spec_expression?
 	;
 
 interface_decl
