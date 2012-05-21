@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.RecognitionException;
+import org.stringtemplate.v4.compiler.CodeGenerator.includeExpr_return;
 
 import proto.core.Compiler;
 import proto.core.TinyCompiler;

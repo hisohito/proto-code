@@ -3,28 +3,8 @@ interface Driver {
 }
 
 class DefaultDriver() < Driver {
-	
-	state waste(){
-		return 0;
-	}
-	
-	state waste2(){
-		return 0;
-	}
-	
-	number another_not_state(){
-		waste2();
-	}
-	
-	number not_state(){
-		return another_not_state();
-	}
-	
 	number press(number boxState){
-		if(cmd == 1)
-			return waste();
-		else
-			return not_state();
+		return random boxState;
 	}
 }
 
@@ -98,7 +78,7 @@ class AutoGear() << Prototype {
 }
 
 prototype AutoGear() {
-	finally{AutoGear::finalize} ;
+	finally{AutoGear::finalize};
 	globally finally{(AutoGear::neutral)};
 	{AutoGear::neutral}until{AutoGear::finalize};	
 	finally{(AutoGear::gear1 and AutoGear::gear2)};

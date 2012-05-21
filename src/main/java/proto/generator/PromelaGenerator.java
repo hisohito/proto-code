@@ -1,17 +1,24 @@
 package proto.generator;
 
 import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import proto.ir.Automata;
 
 public class PromelaGenerator implements Generator {
 
-	private String generateSpecs(Automata automata) {
+	private Collection<String> generateSpecs(Automata automata) {
 
-		StringBuilder specbuilder = new StringBuilder();
-
+		Set<String> allSpec = new HashSet<String>();
+		
 		Collection<String> specs = automata.specs();
 
 		for (String spec : specs) {
@@ -34,11 +41,10 @@ public class PromelaGenerator implements Generator {
 						&& !string.equalsIgnoreCase("<>")) {
 					if (automata.hasState(string)) {
 						// insert state 'stateA1' expression
-						oneSpec.append("stateA1 == "
-								+ string.toUpperCase().replace(':', '_'));
+						oneSpec.append("stateA1 == "+ string.toUpperCase().replace(':', '_'));
 					} else {
-						System.err
-								.println("ERROR: Wrong specification description!");
+						System.err.println("ERROR: Wrong specification description!");
+						break;
 					}
 				} else {
 					oneSpec.append(string);
@@ -55,16 +61,18 @@ public class PromelaGenerator implements Generator {
 				proc = rt.exec("spin.exe -f \"" + oneSpec.toString()+"\"");
 				int exitVal = proc.waitFor();
 
-				DataInputStream ls_in = new DataInputStream(proc.getInputStream());
+				StringBuilder out = new StringBuilder();
+				
+				DataInputStream din = new DataInputStream(proc.getInputStream());
 				String temp = "";
 				try {
-					while ((temp = ls_in.readLine()) != null) {
-						System.out.println(temp);
+					while ((temp = din.readLine()) != null) {
+						out.append(temp);
 					}
+					allSpec.add(out.toString());
 				} catch (IOException e) {
 					System.exit(0);
 				}
-
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -72,11 +80,8 @@ public class PromelaGenerator implements Generator {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			specbuilder.append("\n");
 		}
-
-		return specbuilder.toString();
+		return Collections.unmodifiableSet(allSpec);
 	}
 
 	public String generate(Automata automata) {
@@ -98,19 +103,16 @@ public class PromelaGenerator implements Generator {
 		// main function begins here
 		output.append("\ninline A1() {\n");
 		// body start
-		output.append("\tstateA1 = "
-				+ entryPoint.replace(':', '_').toUpperCase() + ";");
+		output.append("\tstateA1 = "+ entryPoint.replace(':', '_').toUpperCase() + ";");
 		output.append("\n\tdo\n");
 		for (String state : automata.states()) {
-			output.append("\t\t:: ( stateA1 == "
-					+ state.replace(':', '_').toUpperCase() + " ) ->\n");
+			output.append("\t\t:: ( stateA1 == "+ state.replace(':', '_').toUpperCase() + " ) ->\n");
 			if (automata.paths(state) != null) {
 				// printf for log
 				output.append("\t\t\tprintf(\"" + state + "\");\n");
 				output.append("\t\t\tif\n");
 				for (String path : automata.paths(state)) {
-					output.append("\t\t\t\t::stateA1 = "
-							+ path.replace(':', '_').toUpperCase() + ";\n");
+					output.append("\t\t\t\t::stateA1 = "+ path.replace(':', '_').toUpperCase() + ";\n");
 				}
 				output.append("\t\t\tfi;\n");
 			} else {
@@ -124,9 +126,28 @@ public class PromelaGenerator implements Generator {
 		output.append("init {\n\trun Model();\n}\n");
 
 		// spec time
-		output.append(generateSpecs(automata));
-
-		return output.toString();
+		Collection<String> ltlSpec = generateSpecs(automata);
+		// for each generated specification - create file
+		String defaultFilename = "C://Users//Jill//diploma//proto-code//target//protoOutput";
+		int number = 0;
+		for (String string : ltlSpec) {
+			File promela = new File(defaultFilename+(number++)+".pml");
+			try {
+				promela.createNewFile();
+				
+				FileWriter fw = new FileWriter(promela);
+				
+				fw.write(output.toString()+string);
+				
+				fw.close();
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return "Success created "+number+" files";
 	}
 
 }
