@@ -135,13 +135,12 @@ public abstract class AbstractCompiler implements Compiler {
 		return list;
 	}
 	
-	
-
 	protected Automata compile0(CommonTree tree) {
 		mainTree = tree;
 		Automata automata = new Automata();
 		findStates(tree, automata);
 		formPaths(tree, automata);
+		
 		return automata;
 	}
 }

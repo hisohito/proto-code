@@ -1,0 +1,157 @@
+grammar org.example.domainmodel.DomainModel with org.eclipse.xtext.common.Terminals
+
+generate domainModel "http://www.example.org/domainmodel/DomainModel"
+
+Domainmodel:
+	elements+=Statement*;
+
+Statement:
+	Interface_decl | Class_decl | Proto_decl;
+
+QualifiedName:
+	ID (('_'|'::'|'.') ID)*;
+	
+Proto_decl:
+	'prototype' name=QualifiedName '(' params=Parameters ')' '{' specs+=Spec_decl* '}';
+
+Spec_decl:
+	UNARY_SPEC+ '{' Or_spec '}' ';'
+	| '{' Or_spec '}' BINARY_SPEC '{' or=Or_spec '}' ';';
+
+UNARY_SPEC:
+	'finally'
+	| 'globally';
+
+BINARY_SPEC:
+	'until'
+	| 'release'
+	| 'if';
+
+Or_spec:
+	And_spec ('or' ands=And_spec)?;
+
+And_spec:
+	Not_spec ('and' nots=Not_spec)?;
+
+Not_spec:
+	('not')? Spec;
+
+Spec:
+	One_spec ('==' | '!=' ones+=One_spec)*;
+
+One_spec:
+	state=QualifiedName | '(' spece=Or_spec ')';
+
+Class_decl:
+	'class' name=QualifiedName '(' classargs=Arguments ')' ('<' implements1=QualifiedName (','
+	implements2+=QualifiedName)*)? ('<<' superType=QualifiedName)? '{' (classbody+=Body)* '}';
+
+Interface_decl:
+	'interface' iname=QualifiedName '{' (intfbode+=Method_decl)* '}';
+
+Method_decl:
+	type=Types name=QualifiedName '(' args=Arguments ')' ';';
+
+Arguments:
+	(type=Types argname=QualifiedName (',' type=Types argname=QualifiedName)*)?;
+
+Parameters:
+	(params+=Big_expression (',' params+=Big_expression)*)?;
+
+Types:
+	'void'
+	| 'state' Array
+	| 'number' Array
+	| 'bool' Array
+	| 'string' Array
+	| 'object' Array
+	| QualifiedName Array;
+
+Array:
+	('[' ']')*;
+
+Operator:
+	Field
+	| Assignment ';'
+	| Buildin_operator
+	| Call ';'
+	| If_operator
+	| For_operator
+	| While_operator
+	| Do_operator
+	| '{' newblock+=Operator* '}';
+
+Buildin_operator:
+	Print
+	| Die
+	| Return_operator;
+
+Die:
+	'die' Big_expression ';';
+
+Print:
+	'print' Big_expression ';';
+
+Return_operator:
+	'return' Big_expression ';';
+
+Assignment:
+	name=QualifiedName ('[' index+=Big_expression ']')* '=' value=Big_expression;
+
+Big_expression:
+	And_expression ('or' ande=And_expression)?;
+
+And_expression:
+	Not_expression ('and' note=Not_expression)?;
+
+Not_expression:
+	('not')? Expression;
+
+Expression:
+	Relation (('==' | '!=') rel=Relation)?;
+
+Relation:
+	Summand (('>' | '<' | '<=' | '>=') sum=Summand)?;
+
+Summand:
+	Multiplier (('+' | '-') mul=Multiplier)*;
+
+Multiplier:
+	Simple_expression (('*' | '/') se=Simple_expression)*;
+
+Field:
+	type=Types name=QualifiedName ('=' value=Big_expression)? ';';
+
+Simple_expression:
+	name = QualifiedName ('[' index+=Big_expression ']')*
+	| Call
+	| INT
+	| STRING
+	| '[' params=Parameters ']'
+	| '(' be=Big_expression ')'
+	| 'nan'
+	| 'nil'
+	| 'new' name=QualifiedName '(' params=Parameters ')'
+	| 'random' (QualifiedName | INT);
+
+Body:
+	Method
+	| Field;
+
+Method:
+	type=Types name=QualifiedName '(' args=Arguments ')' '{' (methodbody+=Operator)* '}';
+
+Call:
+	name=QualifiedName '(' params=Parameters ')';
+
+If_operator:
+	'if' '(' ifcond=Big_expression ')' ifbody=Operator ('else' elsebody=Operator)?;
+
+For_operator:
+	'for' '(' Assignment ';' forcond=Big_expression ';' forassign=Assignment ')' bode=Operator;
+
+While_operator:
+	'while' '(' Big_expression ')' whilebody=Operator;
+
+Do_operator:
+	'do' '{' dobody=Operator '}' 'while' '(' docond=Big_expression ')' ';';
