@@ -24,11 +24,7 @@ public class Launcher {
 		Generator generator = GENERATORS.get(args.get("target"));
 		Compiler compiler = new TinyCompiler(generator);
 
-		String output = compiler.compile(new ANTLRFileStream(args.get("source")));
-
-		FileWriter fw = new FileWriter(args.get("output"));
-		fw.write(output);
-		fw.close();
+		compiler.compile(new ANTLRFileStream(args.get("source")));
 	}
 
 	public static void usage() {
