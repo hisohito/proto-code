@@ -8,10 +8,13 @@ import org.antlr.runtime.tree.CommonTree;
 import proto.antlr.ProtoLexer;
 import proto.antlr.ProtoParser;
 import proto.generator.Generator;
-import proto.generator.PromelaGenerator;
 import proto.ir.Automata;
 
 public class TinyCompiler extends AbstractCompiler implements Compiler {
+	
+	public TinyCompiler(Generator generator) {
+		super(generator);
+	}
 
 	public static void printTree(CommonTree t, int indent) {
 		if (t != null) {
@@ -36,7 +39,6 @@ public class TinyCompiler extends AbstractCompiler implements Compiler {
 
 		Automata ir = compile0(tree);
 
-		Generator generator = new PromelaGenerator();
 		return generator.generate(ir);
 	}
 }

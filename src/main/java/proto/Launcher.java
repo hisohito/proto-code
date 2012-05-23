@@ -1,5 +1,6 @@
 package proto;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,18 +10,25 @@ import org.antlr.runtime.RecognitionException;
 
 import proto.core.Compiler;
 import proto.core.TinyCompiler;
+import proto.generator.Generator;
+import proto.generator.PromelaGenerator;
 
 public class Launcher {
+	
+	public static final Map<String, Generator> GENERATORS = new HashMap<String, Generator>() {{
+		put("promela", new PromelaGenerator());
+	}};
 
 	public void launch(Map<String, String> args) throws IOException, RecognitionException {
 
-		ANTLRFileStream fs = new ANTLRFileStream("examples/simple.proto");
-		
-		Compiler compiler = new TinyCompiler();
-		String output = "";
-		output = compiler.compile(fs);
-		
-		System.err.println(output);
+		Generator generator = GENERATORS.get(args.get("target"));
+		Compiler compiler = new TinyCompiler(generator);
+
+		String output = compiler.compile(new ANTLRFileStream(args.get("source")));
+
+		FileWriter fw = new FileWriter(args.get("output"));
+		fw.write(output);
+		fw.close();
 	}
 
 	public static void usage() {
@@ -51,6 +59,9 @@ public class Launcher {
 			usage();
 			return;
 		}
+		
+		if (yeld.get("output") == null) yeld.put("output", "out.pml");
+		if (yeld.get("target") == null) yeld.put("target", "promela");
 		
 		new Launcher().launch(yeld);
 	}

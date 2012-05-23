@@ -7,15 +7,19 @@ import java.util.List;
 import org.antlr.runtime.tree.CommonTree;
 
 import proto.antlr.CallNode;
-import proto.antlr.ProtoParser.return_operator_return;
 import proto.antlr.PrototypeNode;
-import proto.antlr.SpecNode;
 import proto.antlr.StateNode;
+import proto.generator.Generator;
 import proto.ir.Automata;
 
 public abstract class AbstractCompiler implements Compiler {
 
-	CommonTree mainTree;
+	protected CommonTree mainTree;
+	protected Generator generator;
+	
+	public AbstractCompiler(Generator generator) {
+		this.generator = generator;
+	}
 
 	private void findStates(CommonTree tree, Automata automata) {
 		if (tree != null) {
