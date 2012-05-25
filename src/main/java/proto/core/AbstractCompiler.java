@@ -144,7 +144,7 @@ public abstract class AbstractCompiler implements Compiler {
 		Automata automata = new Automata();
 		findStates(tree, automata);
 		formPaths(tree, automata);
-		
+		automata.print();
 		return automata;
 	}
 }

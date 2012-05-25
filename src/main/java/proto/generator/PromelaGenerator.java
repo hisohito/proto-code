@@ -18,7 +18,6 @@ public class PromelaGenerator implements Generator {
 		Set<String> allSpec = new HashSet<String>();
 		
 		Collection<String> specs = automata.specs();
-
 		for (String spec : specs) {
 			// replace words
 			spec = spec.replaceAll("finally", "<>")
@@ -139,6 +138,22 @@ public class PromelaGenerator implements Generator {
 				FileWriter fw = new FileWriter(promela);
 				
 				fw.write(output.toString()+string);
+				
+				fw.close();
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if (ltlSpec.isEmpty()){
+			File promela = new File(defaultFilename+".pml");
+			try {
+				promela.createNewFile();
+				
+				FileWriter fw = new FileWriter(promela);
+				
+				fw.write(output.toString());
 				
 				fw.close();
 				
