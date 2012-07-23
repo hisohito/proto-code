@@ -1,37 +1,82 @@
 interface Driver {
 	number press(number boxState);
 }
+
 class DefaultDriver() < Driver {
-	number press(number boxState){return random boxState;}
-}
-class AutoGear() << Prototype {
-	DefaultDriver driver = new DefaultDriver();
-	state finalize() { return "End of work"; }
-	state sleep() { return neutral(); }
-	state neutral(){
-		if (driver.press(3) == 1){   return finalize();
-		} else if (cmd == 2){ return reverse();	
-		} else { return gear1(); }
+	number press(number boxState){
+		return random boxState;
 	}
-	state reverse(){ return neutral(); }
+}
+
+class AutoGear() << Prototype {
+
+	Driver driver = new DefaultDriver();
+	number cmd;
+
+	state finalize() {
+		return "End of work";
+	}
+
+	state sleep() {
+		return neutral();
+	}
+
+	state neutral(){
+		number cmd = driver.press(3);
+		if (cmd == 1){// engine turn off selected
+	        return finalize();
+		} else if (cmd == 2){ // reverse selected				
+			return reverse();			
+		} else { // forward selected
+			return gear1();
+		}
+	}
+
+	state reverse(){
+		return neutral();
+	}
+
 	state gear1(){
-		if (driver.press(2) == 1){	return neutral();
-		} else {	return gear2();	}
+		cmd = driver.press(2);
+		if (cmd == 1){
+			return neutral();
+		} else {
+			return gear2();
+		}
 	}
 	state gear2(){
-		if (driver.press(2) == 1){ return gear1();
-		} else { return gear3();}
+		cmd = driver.press(2);
+		if (cmd == 1){
+			return gear1();
+		} else {
+			return gear3();
+		}
 	}
 	state gear3(){
-		if (driver.press(2) == 1){	return gear2();
-		} else { return gear4(); }
+	    cmd = driver.press(2);
+		if (cmd == 1){
+			return gear2();
+		} else {
+			return gear4();
+		}
 	}
 	state gear4(){
-		if (driver.press(2) == 1){	return gear3();
-		} else { return gear5(); }
+	    cmd = driver.press(2);
+		if (cmd == 1){
+			return gear3();
+		} else {
+			return gear5();
+		}
 	}
-	state gear5(){ 	return gear4();	}
-	state main(){	return sleep();	}
+	state gear5(){
+        	return gear4();
+	}
+
+	state main(){
+		return sleep();
+	}
 }
+
 prototype AutoGear() {
-} 
+	finally {AutoGear::finalize};
+}

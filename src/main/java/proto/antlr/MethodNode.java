@@ -1,14 +1,14 @@
 // **********************************************************************
 // Proto Project
-// 
-// Copyright (c) 2012 Julia Shatilina <julia.shatilina@gmail.com>  
+//
+// Copyright (c) 2012 Julia Shatilina <julia.shatilina@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
-//      
+// http://www.apache.org/licenses/LICENSE-2.0
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,28 +19,30 @@
 
 package proto.antlr;
 
-import org.antlr.runtime.CommonToken;
-import org.antlr.runtime.Token;
-import org.antlr.runtime.tree.CommonTree;
+import org.antlr.runtime.*;
+import org.antlr.runtime.tree.*;
+
+import proto.constants.*;
 
 public class MethodNode extends CommonTree {
 
-	String classname;
+    String classname;
 
-	public MethodNode(int ttype) {
-		token = new CommonToken(ttype, "");
-	}
+    public MethodNode(int ttype) {
+        token = new CommonToken(ttype, "");
+    }
 
-	public MethodNode(Token t) {
-		token = t;
-	}
+    public MethodNode(Token t) {
+        token = t;
+    }
 
-	public MethodNode(int ttype, Token t, String cname) {
-		token = t;
-		this.classname = cname;
-	}
+    public MethodNode(int ttype, Token t, String cname) {
+        token = t;
+        this.classname = cname;
+    }
 
-	public String toString() {
-		return this.classname + "::" + (token != null ? token.getText() : "");
-	}
+    public String toString() {
+        return this.classname + Constants.SMBL_DOUBLE_COLON
+                + (token != null ? token.getText() : "");
+    }
 }
