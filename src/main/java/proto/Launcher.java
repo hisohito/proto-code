@@ -37,6 +37,12 @@ public class Launcher {
         }
     };
 
+    /**
+     * 
+     * @param args
+     * @throws IOException
+     * @throws RecognitionException
+     */
     public void launch(Map<String, String> args) throws IOException,
             RecognitionException {
         Generator generator = GENERATORS.get(args
@@ -46,11 +52,20 @@ public class Launcher {
                 .get(Constants.PARAMETERS_SOURCE)));
     }
 
+    /**
+     * 
+     */
     public static void usage() {
         String usage = Constants.USAGE;
         System.out.println(usage);
     }
 
+    /**
+     * 
+     * @param args
+     * @throws IOException
+     * @throws RecognitionException
+     */
     public static void main(String[] args) throws IOException,
             RecognitionException {
         Map<String, String> yeld = new HashMap<String, String>();

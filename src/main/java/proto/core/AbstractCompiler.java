@@ -32,10 +32,19 @@ public abstract class AbstractCompiler implements Compiler {
     protected CommonTree mainTree;
     protected Generator generator;
 
+    /**
+     * 
+     * @param generator
+     */
     public AbstractCompiler(Generator generator) {
         this.generator = generator;
     }
 
+    /**
+     * 
+     * @param tree
+     * @param automata
+     */
     private void findStates(CommonTree tree, Automata automata) {
         if (tree != null) {
             for (int i = 0; i < tree.getChildCount(); i++) {
@@ -48,6 +57,12 @@ public abstract class AbstractCompiler implements Compiler {
         }
     }
 
+    /**
+     * 
+     * @param tree
+     * @param name
+     * @return
+     */
     private CommonTree getSubTree(CommonTree tree, String name) {
         if (tree != null) {
             for (int i = 0; i < tree.getChildCount(); i++) {
@@ -64,6 +79,11 @@ public abstract class AbstractCompiler implements Compiler {
         return null;
     }
 
+    /**
+     * 
+     * @param tree
+     * @param automata
+     */
     private void formPaths(CommonTree tree, Automata automata) {
         if (tree != null) {
             for (int i = 0; i < tree.getChildCount(); i++) {
@@ -116,6 +136,12 @@ public abstract class AbstractCompiler implements Compiler {
         }
     }
 
+    /**
+     * 
+     * @param tree
+     * @param automata
+     * @return
+     */
     private String formSpec(CommonTree tree, Automata automata) {
         if (tree != null) {
             String result = "";
@@ -135,6 +161,13 @@ public abstract class AbstractCompiler implements Compiler {
         return "";
     }
 
+    /**
+     * 
+     * @param tree
+     * @param id
+     * @param automata
+     * @return
+     */
     private Collection<String> resolveCall(CommonTree tree, String id,
             Automata automata) {
         List<String> list = new ArrayList<String>();
@@ -164,6 +197,11 @@ public abstract class AbstractCompiler implements Compiler {
         return list;
     }
 
+    /**
+     * 
+     * @param tree
+     * @return
+     */
     protected Automata compile0(CommonTree tree) {
         mainTree = tree;
         Automata automata = new Automata();

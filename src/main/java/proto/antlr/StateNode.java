@@ -28,19 +28,36 @@ public class StateNode extends CommonTree {
 
     String classname;
 
+    /**
+     * 
+     * @param ttype
+     */
     public StateNode(int ttype) {
         token = new CommonToken(ttype, "");
     }
 
+    /**
+     * 
+     * @param t
+     */
     public StateNode(Token t) {
         token = t;
     }
 
+    /**
+     * 
+     * @param ttype
+     * @param t
+     * @param cname
+     */
     public StateNode(int ttype, Token t, String cname) {
         token = t;
         this.classname = cname;
     }
 
+    /**
+     * 
+     */
     public String toString() {
         return classname + Constants.SMBL_DOUBLE_COLON
                 + (token != null ? token.getText() : "");

@@ -28,10 +28,20 @@ import proto.ir.*;
 
 public class TinyCompiler extends AbstractCompiler implements Compiler {
 
+    /**
+     * 
+     * @param generator
+     */
     public TinyCompiler(Generator generator) {
         super(generator);
     }
 
+    /**
+     * 
+     * @param t
+     *            - tree of proto program
+     * @param indent
+     */
     public static void printTree(CommonTree t, int indent) {
         if (t != null) {
             StringBuffer sb = new StringBuffer(indent);

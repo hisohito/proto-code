@@ -24,14 +24,25 @@ import org.antlr.runtime.tree.*;
 
 public class ClassNode extends CommonTree {
 
+    /**
+     * 
+     * @param ttype
+     */
     public ClassNode(int ttype) {
         token = new CommonToken(ttype, "");
     }
 
+    /**
+     * 
+     * @param t
+     */
     public ClassNode(Token t) {
         token = t;
     }
 
+    /**
+     * 
+     */
     public String toString() {
         return (token != null ? token.getText() : "");
     }

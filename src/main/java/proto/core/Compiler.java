@@ -22,5 +22,12 @@ package proto.core;
 import org.antlr.runtime.*;
 
 public interface Compiler {
+    /**
+     * Main method of compiler
+     * 
+     * @param fs
+     * @return
+     * @throws RecognitionException
+     */
     public String compile(ANTLRFileStream fs) throws RecognitionException;
 }

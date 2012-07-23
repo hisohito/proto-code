@@ -22,5 +22,10 @@ package proto.generator;
 import proto.ir.*;
 
 public interface Generator {
+    /**
+     * 
+     * @param automata
+     * @return
+     */
     public String generate(Automata automata);
 }

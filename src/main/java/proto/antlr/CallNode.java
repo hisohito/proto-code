@@ -28,19 +28,36 @@ public class CallNode extends CommonTree {
 
     String classname;
 
+    /**
+     * 
+     * @param ttype
+     */
     public CallNode(int ttype) {
         token = new CommonToken(ttype, "");
     }
 
+    /**
+     * 
+     * @param t
+     */
     public CallNode(Token t) {
         token = t;
     }
 
+    /**
+     * 
+     * @param ttype
+     * @param t
+     * @param cname
+     */
     public CallNode(int ttype, Token t, String cname) {
         token = t;
         this.classname = cname;
     }
 
+    /**
+     * 
+     */
     public String toString() {
         String name = (token.getText().indexOf(Constants.SMBL_DOT) != -1) ? token
                 .getText().substring(

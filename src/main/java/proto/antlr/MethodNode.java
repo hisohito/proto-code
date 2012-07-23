@@ -28,19 +28,36 @@ public class MethodNode extends CommonTree {
 
     String classname;
 
+    /**
+     * 
+     * @param ttype
+     */
     public MethodNode(int ttype) {
         token = new CommonToken(ttype, "");
     }
 
+    /**
+     * 
+     * @param t
+     */
     public MethodNode(Token t) {
         token = t;
     }
 
+    /**
+     * 
+     * @param ttype
+     * @param t
+     * @param cname
+     */
     public MethodNode(int ttype, Token t, String cname) {
         token = t;
         this.classname = cname;
     }
 
+    /**
+     * 
+     */
     public String toString() {
         return this.classname + Constants.SMBL_DOUBLE_COLON
                 + (token != null ? token.getText() : "");

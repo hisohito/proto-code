@@ -31,18 +31,36 @@ public final class Automata {
         LTLSpec = new HashSet<String>();
     }
 
+    /**
+     * 
+     * @param id
+     */
     public void addState(String id) {
         states.add(id);
     }
 
+    /**
+     * 
+     * @param id
+     * @return
+     */
     public boolean hasState(String id) {
         return states.contains(id);
     }
 
+    /**
+     * 
+     * @return
+     */
     public Collection<String> states() {
         return Collections.unmodifiableSet(states);
     }
 
+    /**
+     * 
+     * @param fromId
+     * @param toId
+     */
     public void addPath(String fromId, String toId) {
         Set<String> path = paths.get(fromId);
         if (path == null) {
@@ -54,22 +72,44 @@ public final class Automata {
         }
     }
 
+    /**
+     * 
+     * @param state
+     * @return
+     */
     public Collection<String> paths(String state) {
         return paths.get(state);
     }
 
+    /**
+     * 
+     * @param fromId
+     * @param toId
+     * @return
+     */
     public boolean hasPath(String fromId, String toId) {
         return paths.get(fromId).contains(toId);
     }
 
+    /**
+     * 
+     * @param id
+     */
     public void addSpec(String id) {
         LTLSpec.add(id);
     }
 
+    /**
+     * 
+     * @return
+     */
     public Collection<String> specs() {
         return Collections.unmodifiableSet(LTLSpec);
     }
 
+    /**
+     * 
+     */
     public void print() {
         for (String state : this.states()) {
             System.out.println(state);

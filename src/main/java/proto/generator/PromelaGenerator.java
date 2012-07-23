@@ -27,6 +27,13 @@ import proto.ir.*;
 
 public class PromelaGenerator implements Generator {
 
+    /**
+     * Generate specifications for promela model
+     * 
+     * @param automata
+     *            - automata of proto source system
+     * @return Collection<String> - list og specifications
+     */
     private Collection<String> generateSpecs(Automata automata) {
         Set<String> allSpec = new HashSet<String>();
         Collection<String> specs = automata.specs();
@@ -99,6 +106,12 @@ public class PromelaGenerator implements Generator {
         return Collections.unmodifiableSet(allSpec);
     }
 
+    /**
+     * Promela source code generation
+     * 
+     * @param automata
+     *            - proto-based automata
+     */
     public String generate(Automata automata) {
         StringBuilder output = new StringBuilder();
         output.append(Constants.PML_VARS_DEFINITION);
@@ -162,7 +175,8 @@ public class PromelaGenerator implements Generator {
         // spec time
         Collection<String> ltlSpec = generateSpecs(automata);
         // for each generated specification - create file
-        String defaultFilename = "C://Users//Jill//diploma//proto-code//target//protoOutput";
+        // String defaultFilename =
+        // "C://Users//Jill//diploma//proto-code//target//protoOutput";
         int number = 0;
         for (String string : ltlSpec) {
             File promela = new File(Constants.DEFAULT_OUTPUT_FILENAME
@@ -177,7 +191,7 @@ public class PromelaGenerator implements Generator {
             }
         }
         if (ltlSpec.isEmpty()) {
-            File promela = new File(defaultFilename
+            File promela = new File(Constants.DEFAULT_OUTPUT_FILENAME
                     + Constants.PML_FILE_EXTENSION);
             try {
                 promela.createNewFile();

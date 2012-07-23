@@ -27,19 +27,36 @@ import proto.constants.*;
 public class PrototypeNode extends CommonTree {
     String classname;
 
+    /**
+     * 
+     * @param ttype
+     */
     public PrototypeNode(int ttype) {
         token = new CommonToken(ttype, "");
     }
 
+    /**
+     * 
+     * @param t
+     */
     public PrototypeNode(Token t) {
         token = t;
     }
 
+    /**
+     * 
+     * @param ttype
+     * @param t
+     * @param cname
+     */
     public PrototypeNode(int ttype, Token t, String cname) {
         token = t;
         this.classname = cname;
     }
 
+    /**
+     * 
+     */
     public String toString() {
         String name = token.getText();
         return this.classname + Constants.SMBL_DOUBLE_COLON
