@@ -21,6 +21,7 @@ package proto.ir;
 import java.util.*;
 
 public final class Automata {
+
     private Set<String> states;
     private Map<String, Set<String>> paths;
     private Set<String> LTLSpec;
@@ -40,24 +41,24 @@ public final class Automata {
     }
 
     /**
-     * 
+     * Check if state with te id specified exist in automata
      * @param id
-     * @return
+     * @return boolean
      */
     public boolean hasState(String id) {
         return states.contains(id);
     }
 
     /**
-     * 
-     * @return
+     * Return all states
+     * @return Collection<String>
      */
     public Collection<String> states() {
         return Collections.unmodifiableSet(states);
     }
 
     /**
-     * 
+     * Add path between two states
      * @param fromId
      * @param toId
      */
@@ -73,7 +74,7 @@ public final class Automata {
     }
 
     /**
-     * 
+     * Get all states for specified state id
      * @param state
      * @return
      */
@@ -82,7 +83,7 @@ public final class Automata {
     }
 
     /**
-     * 
+     * Check if path exist
      * @param fromId
      * @param toId
      * @return
@@ -92,7 +93,7 @@ public final class Automata {
     }
 
     /**
-     * 
+     * Add specification node
      * @param id
      */
     public void addSpec(String id) {
@@ -100,15 +101,15 @@ public final class Automata {
     }
 
     /**
-     * 
-     * @return
+     * Return all specifications of automata
+     * @return Collection<String>
      */
     public Collection<String> specs() {
         return Collections.unmodifiableSet(LTLSpec);
     }
 
     /**
-     * 
+     * Print automata
      */
     public void print() {
         for (String state : this.states()) {
